@@ -1,0 +1,12 @@
+{
+  "name": "call-it",
+  "version": "5.0.0",
+  "private": true,
+  "description": "Tennis odds site: a Netlify function rebuilds each match from the feed's lines and prices every pick from it.",
+  "scripts": {
+    "test": "node tests/roundtrip.js && node tests/check-engine.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
