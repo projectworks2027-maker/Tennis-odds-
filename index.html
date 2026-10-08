@@ -413,12 +413,14 @@ function buildPanels(){
 /* ===== ALL MARKETS PAGE: the full model numbers and every pick the model rates at 50% or better ===== */
 const MK_GROUPS=[["Winner","Winner"],["Handicap","Game handicap"],["Set","Set handicap"],["Total","Total games"],["Set1Total","First set total"],["Set2Total","Second set total"],["PlayerTotal","Player totals"]];
 const tailOf=c=>[c.cush!=null&&c.cush>0?c.cush.toFixed(1)+" games of cushion":"",c.mod?"model estimate, no line posted":"",c.mo?"model only, no moneyline":""].filter(Boolean).join(" · ");
+function goM(d){if(!G.length)return;i=(i+d+G.length)%G.length;route("markets/"+i)}
+const mNav=()=>'<div class="nav"><button data-mnav="-1" aria-label="Previous match">‹</button><span class="why" style="margin:0;text-align:center">Match '+(i+1)+' of '+G.length+'</span><button data-mnav="1" aria-label="Next match">›</button></div>';
 function renderMarkets(){
   const el=$("mktPage"),g=G[i];
   if(!g){el.innerHTML='<a href="#" class="back" id="mkback">← Back to matches</a><p class="why">No match selected.</p>';$("mkback").onclick=e=>{e.preventDefault();route("")};return}
   const t=g[5],M=t.model||{},all=t.opts||[],row=(l,a,b)=>'<b>'+l+'</b><span>'+a+'</span><span>'+(b==null?"":b)+'</span>';
   const when=new Date(g[2]).toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
-  let h='<a href="#" class="back" id="mkback">← Back to match</a><h2>'+esc(g[0])+' v '+esc(g[1])+'</h2><p class="why">'+when+' · '+esc(g[4])+'</p>';
+  let h=mNav()+'<a href="#" class="back" id="mkback">← Back to match</a><h2>'+esc(g[0])+' v '+esc(g[1])+'</h2><p class="why">'+when+' · '+esc(g[4])+'</p>';
   h+='<div class="pickbox"><h3>Model numbers</h3><div class="mdl"><span class="h"></span><span class="h">'+esc(nm(g[0]))+'</span><span class="h">'+esc(nm(g[1]))+'</span>'
    +row("Win chance",g[3][0]+"%",g[3][1]+"%")
    +row(t.src==="Pinnacle moneyline"?"Moneyline in the feed":"Est. bookmaker moneyline",t.odds[0].toFixed(2),t.odds[1].toFixed(2))
@@ -441,7 +443,8 @@ function renderMarkets(){
   });
   const so=slip.reduce((a,x)=>a*x.odds,1);
   h+='<button class="bigbtn" id="mkslip">Bet slip: '+slip.length+' pick'+(slip.length===1?'':'s')+(slip.length?' · combined odds '+so.toFixed(2):'')+' · view</button>';
-  el.innerHTML=h;
+  el.innerHTML=h+mNav();
+  el.querySelectorAll("[data-mnav]").forEach(b=>{b.onclick=()=>goM(+b.dataset.mnav)});
   $("mkback").onclick=e=>{e.preventDefault();route("/"+i)};
   $("mkslip").onclick=()=>{route("/"+i);setTimeout(()=>{const b=$("betslip");if(b)b.scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})},150)};
   wirePicks(el,g)
@@ -507,8 +510,11 @@ $("st").addEventListener("touchend",e=>{const t=e.changedTouches[0],dx=t.clientX
 addEventListener("keydown",e=>{
   if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
   const d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0;if(!d)return;
-  if(view==="main")go(d)
+  if(view==="main")go(d);else if(view==="mkts")goM(d)
 });
+let mx=0,my=0;
+$("mktPage").addEventListener("touchstart",e=>{mx=e.touches[0].clientX;my=e.touches[0].clientY},{passive:true});
+$("mktPage").addEventListener("touchend",e=>{const t=e.changedTouches[0],dx=t.clientX-mx,dy=t.clientY-my;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8)goM(dx<0?1:-1)},{passive:true});
 $("backlink").onclick=e=>{e.preventDefault();route("/"+i)};
 $("aboutlink").onclick=e=>{e.preventDefault();route("about")};
 $("tracklink").onclick=e=>{e.preventDefault();route("tracker")};
