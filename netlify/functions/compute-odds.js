@@ -36,7 +36,8 @@ const CFG = {
   HMAX_CAP: 8.5,          // largest handicap protection considered
   S_ROBUST: 0.04,         // serve-level swing used when S could not be anchored
   PICKEM: [1.70, 2.50],
-  MAX_MATCHES: 60,
+  MAX_MATCHES: 250,        // no longer the limit: the time budget is, and unfinished matches carry over to the next request
+  BUDGET_MS: 6500,         // time one request may spend fitting matches
   LOOKAHEAD_H: 72,
   MAX_TT_GAP: 0.07,       // mean gap on each player's own games lines (team totals)
   W_TT: 0.5               // weight of team totals in the serve-level fit (their limits are thin)
@@ -221,7 +222,7 @@ function anchorLoss(c, hur, anc, S0) {
   return e;
 }
 
-function solveMarket(L, S0, anc) {
+function solveMarket(L, S0, anc, hint) {
   const hur = { m: -L.hLine, t: L.tLine };
   const hasA = anc && (anc.p3 != null || anc.h20 != null || anc.a20 != null || anc.tt || (anc.s1 && Object.keys(anc.s1).length > 0));
   let best = null;
@@ -235,6 +236,12 @@ function solveMarket(L, S0, anc) {
       res[S] = c ? (c.loss = anchorLoss(c, hur, anc, S0)) : null;
       if (c && (!best || c.loss < best.loss)) best = c;
     };
+    /* a fit from an earlier refresh of the same match: the serve level barely moves, so one solve is enough */
+    if (hint != null) {
+      tryS(hint);
+      if (best && Math.abs(best.errM) < 0.01) { best.anchored = true; return best; }
+      best = null; for (const k in res) delete res[k];
+    }
     /* grid centred on this tour's prior (the old fixed grid 0.62-0.74 never reached women's serve levels near 0.56) */
     const G = [S0 - 0.06, S0, S0 + 0.06].map((x) => Math.round(x * 100) / 100);
     G.forEach(tryS);
@@ -248,7 +255,7 @@ function solveMarket(L, S0, anc) {
     } else if (best) { tryS(best.S - 0.03); tryS(best.S + 0.03); }
     if (best) best.anchored = true;
   } else {
-    for (const S of [S0, S0 - 0.03, S0 + 0.03, S0 - 0.06, S0 + 0.06, S0 - 0.09, S0 + 0.09, S0 - 0.12, S0 + 0.12]) {
+    for (const S of [hint != null ? hint : S0, S0, S0 - 0.03, S0 + 0.03, S0 - 0.06, S0 + 0.06, S0 - 0.09, S0 + 0.09, S0 - 0.12, S0 + 0.12]) {
       if (S < 0.45 || S > 0.76) continue;
       const c = solveAtS(L, hur, S);
       if (!c) continue;
@@ -358,6 +365,7 @@ function set1Info(p1) {
 /* ---------------------------- BUILD ---------------------------- */
 const R1 = (x) => Math.round(x * 10) / 10, R2 = (x) => Math.round(x * 100) / 100;
 const SOLVED = new Map();
+const HINT = new Map();
 
 /* Candidate picks from the fitted match distribution (chance between 50% and 97% only):
    - Handicap: protection only (a player gets +k games), never the spread
@@ -502,7 +510,8 @@ function ratingCheck(R, tourn, home, away) {
 }
 
 /* ---------------------------- BUILD ---------------------------- */
-function build(events, nowMs, generatedAt, ratings) {
+function build(events, nowMs, generatedAt, ratings, budgetMs) {
+  budgetMs = budgetMs || CFG.BUDGET_MS;
   const skipped = {}, bump = (k) => { skipped[k] = (skipped[k] || 0) + 1; };
   const started = Date.now();
   if (SOLVED.size > 400) SOLVED.clear();
@@ -556,9 +565,10 @@ function build(events, nowMs, generatedAt, ratings) {
   /* tour matches first, Challengers last, then by start time */
   cands.sort((a, b) => ((a.cat === "Challenger") - (b.cat === "Challenger")) || a.st - b.st);
 
-  const matches = [], snaps = [];
+  const matches = [], snaps = [], used = [];
+  let pending = 0, newSolved = 0;
   cands.slice(0, CFG.MAX_MATCHES).forEach((c) => {
-    if (Date.now() - started > 7000) { bump("out of time (will appear on the next refresh)"); return; }
+    if (Date.now() - started > budgetMs) { pending++; return; }
     const L = c.lad, anc = {};
     const real = mlIdx[c.home + "|" + c.away] || null;
     const mlProb = real ? devig2(real[0], real[1]) : null;
@@ -571,7 +581,8 @@ function build(events, nowMs, generatedAt, ratings) {
     const sig = c.ev.event_id + "|" + L.hLine + "|" + L.cover.toFixed(4) + "|" + L.tLine + "|" + L.pOver.toFixed(4) + "|" +
       JSON.stringify(anc, (k, v) => (typeof v === "number" ? Math.round(v * 1000) / 1000 : v));
     let sol = SOLVED.get(sig);
-    if (!sol) { sol = solveMarket(L, c.prior, anc); if (sol) SOLVED.set(sig, sol); }
+    if (!sol) { sol = solveMarket(L, c.prior, anc, HINT.get(String(c.ev.event_id))); if (sol) { SOLVED.set(sig, sol); HINT.set(String(c.ev.event_id), sol.S); newSolved++; } }
+    if (sol) used.push([sig, sol]);
     if (!sol) { bump("model did not fit the lines"); return; }
     const hur = { m: -L.hLine, t: L.tLine };
     const r = mix(sol.sA, sol.sB, sol.tau, hur);
@@ -676,7 +687,7 @@ function build(events, nowMs, generatedAt, ratings) {
         mkt: { hLine: L.hLine, cover: R4(L.cover), tLine: L.tLine, pOver: R4(L.pOver), p3: anc.p3 == null ? null : R4(anc.p3) } } });
   });
 
-  return { matches, meta: { v: 5, generated_at: generatedAt || new Date(nowMs).toISOString(), scanned: events.length, kept: matches.length, skipped }, snaps };
+  return { matches, meta: { v: 5, generated_at: generatedAt || new Date(nowMs).toISOString(), scanned: events.length, kept: matches.length, total: cands.length, pending, skipped }, snaps, solved: used, newSolved };
 }
 
 /* ---------------------------- STORAGE (Netlify Blobs; every call is optional and can never break the page) ---------------------------- */
@@ -736,7 +747,8 @@ async function loadRatings(store) {
 }
 
 /* ---------------------------- HANDLER ---------------------------- */
-let CACHE = null;
+let CACHE = null, FEED = null;
+const LASTP = new Map();
 const reply = (status, body, ok) => ({
   statusCode: status,
   headers: Object.assign({ "Content-Type": "application/json" }, ok
@@ -744,6 +756,15 @@ const reply = (status, body, ok) => ({
     : { "Cache-Control": "no-store" }),
   body: JSON.stringify(body)
 });
+
+/* fits already solved are kept in storage, so a day with 150 matches finishes over a few quick refreshes instead of being cut off */
+async function loadSolved(store) {
+  if (!store || SOLVED.size) return;
+  try {
+    const rec = await store.get("solved/latest", { type: "json" });
+    if (rec && Array.isArray(rec.items)) rec.items.forEach((kv) => { SOLVED.set(kv[0], kv[1]); HINT.set(String(kv[0]).split("|")[0], kv[1].S); });
+  } catch (e) { /* optional */ }
+}
 
 exports.handler = async function (event) {
   const t0 = Date.now(), q = (event && event.queryStringParameters) || {};
@@ -766,23 +787,37 @@ exports.handler = async function (event) {
   if (!key) return reply(500, { error: "No API key found: set TENNIS_FEED_TOKEN (or PINNWIRE_KEY) in the Netlify environment variables" });
   if (CACHE && Date.now() - CACHE.ts < CFG.CACHE_MS) return reply(200, CACHE.payload, true);
   try {
-    const res = await fetch(CFG.URL, { headers: { "x-api-key": key, "User-Agent": "CallIt/1.0" }, signal: AbortSignal.timeout(8000) });
-    if (res.status === 401) return reply(502, { error: "Pinnwire rejected the key (401). Check PINNWIRE_KEY." });
-    if (res.status === 429) throw new Error("Pinnwire rate limit hit (retry in " + (res.headers.get("retry-after") || "a while") + "s)");
-    if (!res.ok) throw new Error("Pinnwire HTTP " + res.status);
-    const data = await res.json();
-    const rr = await loadRatings(store);
-    const out = build(Array.isArray(data.events) ? data.events : [], Date.now(), data.generated_at, rr && rr.R);
-    const snaps = out.snaps; delete out.snaps;
-    CACHE = { ts: Date.now(), payload: out };
-    /* save this look at the market, within what is left of the time limit; failures are ignored */
-    if (store && snaps.length) {
-      const left = 9000 - (Date.now() - t0);
-      if (left > 700) await Promise.race([persistSnaps(store, snaps).catch(() => {}), sleep(left - 400)]);
-      const stale = !rr || Date.now() - Date.parse(rr.t) > 12 * 3600e3, left2 = 9000 - (Date.now() - t0);
-      if (stale && left2 > 3000) { try { const f = await refreshRatings(store, Date.now() + left2 - 1200); if (f) RCACHE = { ts: Date.now(), rec: f }; } catch (e) { /* later */ } }
+    /* the feed is fetched at most once per cache window, even while a long day is still being fitted */
+    if (!FEED || Date.now() - FEED.ts > CFG.CACHE_MS) {
+      const res = await fetch(CFG.URL, { headers: { "x-api-key": key, "User-Agent": "CallIt/1.0" }, signal: AbortSignal.timeout(8000) });
+      if (res.status === 401) return reply(502, { error: "Pinnwire rejected the key (401). Check PINNWIRE_KEY." });
+      if (res.status === 429) throw new Error("Pinnwire rate limit hit (retry in " + (res.headers.get("retry-after") || "a while") + "s)");
+      if (!res.ok) throw new Error("Pinnwire HTTP " + res.status);
+      FEED = { ts: Date.now(), data: await res.json() };
     }
-    return reply(200, out, true);
+    const data = FEED.data;
+    await loadSolved(store);
+    const rr = await loadRatings(store);
+    const budget = Math.max(1500, Math.min(CFG.BUDGET_MS, 8000 - (Date.now() - t0)));
+    const out = build(Array.isArray(data.events) ? data.events : [], Date.now(), data.generated_at, rr && rr.R, budget);
+    const snaps = out.snaps, solved = out.solved, newSolved = out.newSolved;
+    delete out.snaps; delete out.solved; delete out.newSolved;
+    const unfinished = out.meta.pending > 0;
+    if (!unfinished) CACHE = { ts: Date.now(), payload: out };      /* unfinished answers are never cached: the page asks again */
+    if (store) {
+      const fresh = snaps.filter((s) => Date.now() - (LASTP.get(s.id) || 0) > 25 * 60e3);
+      if (LASTP.size > 3000) LASTP.clear();
+      fresh.forEach((s) => LASTP.set(s.id, Date.now()));
+      let left = 9000 - (Date.now() - t0);
+      if (newSolved && left > 600) {
+        await Promise.race([store.setJSON("solved/latest", { t: new Date().toISOString(), items: solved.slice(0, 600) }).catch(() => {}), sleep(Math.min(left - 300, 1500))]);
+        left = 9000 - (Date.now() - t0);
+      }
+      if (fresh.length && left > 700) await Promise.race([persistSnaps(store, fresh).catch(() => {}), sleep(left - 400)]);
+      const stale = !rr || Date.now() - Date.parse(rr.t) > 12 * 3600e3, left2 = 9000 - (Date.now() - t0);
+      if (!unfinished && stale && left2 > 3000) { try { const f = await refreshRatings(store, Date.now() + left2 - 1200); if (f) RCACHE = { ts: Date.now(), rec: f }; } catch (e) { /* later */ } }
+    }
+    return reply(200, out, !unfinished);
   } catch (e) {
     if (CACHE) return reply(200, Object.assign({}, CACHE.payload, { stale: true, warning: String(e.message || e) }), false);
     return reply(502, { error: String(e.message || e) });
