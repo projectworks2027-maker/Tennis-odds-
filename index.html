@@ -3,140 +3,154 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b2a31" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef7f4" media="(prefers-color-scheme: light)">
 <title>Call It — tennis odds from the market</title>
 <style>
-:root{--foam:#e6f4ef;--coral:#e8574a;--sea:#0b2a31;--teal:#4fd0da;--gold:#f2c14e;color-scheme:light dark}
+:root{--bg0:#0b2a31;--bg1:#15474f;--ink:#fff;--foam:#e6f4ef;--soft:#dcefe8;--muted:#a9d3c6;--muted2:#8fb9ad;
+--card:#0e3239;--card2:#153f46;--card3:#0e3037;--card4:#17393a;--field:#09262c;--field2:#0f373d;--sel:#173d43;
+--line:#1d4a50;--line2:#23555c;--line3:#2b6268;--line4:#2f5b58;--bar:#0b2a31f2;
+--coral:#e8574a;--teal:#4fd0da;--gold:#f2c14e;--good:#7fd6a4;--bad:#e7a19a;
+--warnbg:#4a2a24;--warnline:#a8554a;--warnink:#ffd9d3;--onbg:#e6f4ef;--onfg:#0b2a31;--goldline:#f2c14e77;color-scheme:light dark}
+@media(prefers-color-scheme:light){:root{--bg0:#eef7f4;--bg1:#ffffff;--ink:#0b2a31;--foam:#0b2a31;--soft:#1d3f46;--muted:#4b6b64;--muted2:#5d7d76;
+--card:#ffffff;--card2:#f3faf7;--card3:#e9f4f0;--card4:#f1f9f6;--field:#f3faf7;--field2:#eef7f4;--sel:#dff0ea;
+--line:#d3e5de;--line2:#c4dcd4;--line3:#a8c8bd;--line4:#a8c8bd;--bar:#eef7f4f2;
+--coral:#d1453a;--teal:#0d7783;--gold:#8f6200;--good:#1c8a52;--bad:#c0463b;
+--warnbg:#fde8e4;--warnline:#e0a096;--warnink:#7a2a20;--onbg:#0b2a31;--onfg:#ffffff;--goldline:#8f620066}}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{margin:0;min-height:100vh;background:radial-gradient(120% 90% at 85% 0,#15474f,var(--sea) 60%) fixed,#0b2a31;color:var(--foam);font:17px/1.55 "Work Sans",system-ui,sans-serif}
+body{margin:0;min-height:100vh;background:radial-gradient(120% 90% at 85% 0,var(--bg1),var(--bg0) 60%) fixed,var(--bg0);color:var(--foam);font:17px/1.55 "Work Sans",system-ui,sans-serif}
 h1{font:800 clamp(2.4rem,9vw,3.4rem)/1 Fraunces,Georgia,serif;letter-spacing:-.025em;margin:0}
-:focus-visible{outline:3px solid #fff;outline-offset:3px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 [hidden]{display:none!important}
 .toprow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.toprow a{color:#a9d3c6;font-size:.82rem;text-decoration:none;white-space:nowrap}
+.toprow a{color:var(--muted);font-size:.82rem;text-decoration:none;white-space:nowrap}
 .toprow nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 14px}
 .about{max-width:720px;margin:0 auto;padding:20px 20px 60px}
-.about a#backlink{color:#a9d3c6;text-decoration:none;font-size:.92rem}
+.about a#backlink{color:var(--muted);text-decoration:none;font-size:.92rem}
 .about h2{font:800 clamp(1.9rem,7vw,2.6rem) Fraunces,Georgia,serif;margin:16px 0 6px}
 .about h3{font:800 1.2rem Fraunces,Georgia,serif;margin:22px 0 6px}
-.about p{color:#dcefe8;max-width:36em}
-.fine2{color:#8dc0b1;font-size:.88rem;border-top:1px solid #1d4a50;padding-top:16px;margin-top:26px}
-.bar{position:sticky;top:0;z-index:5;background:#0b2a31f2;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #1d4a50;padding:12px 20px 10px}
+.about p{color:var(--soft);max-width:36em}
+.fine2{color:var(--muted2);font-size:.88rem;border-top:1px solid var(--line);padding-top:16px;margin-top:26px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bar);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 20px 10px}
 .w{max-width:720px;margin:0 auto}
 .betday{max-width:720px;margin:12px auto 0;padding:0 20px}
-.betday-card{background:linear-gradient(135deg,#153f46,#0e3037);border:1px solid #2b6268;border-radius:18px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.betday-card{background:linear-gradient(135deg,var(--card2),var(--card3));border:1px solid var(--line3);border-radius:18px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .betday-label{color:var(--coral);font:800 .7rem/1.35 "Work Sans",sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
 .betday-match{font:800 1.05rem/1.25 Fraunces,Georgia,serif;margin-top:2px}
-.betday-meta{color:#a9d3c6;font-size:.76rem;margin-top:4px;line-height:1.35}
-.betday-meta b{color:#fff}
+.betday-meta{color:var(--muted);font-size:.76rem;margin-top:4px;line-height:1.35}
+.betday-meta b{color:var(--ink)}
 .betday-pick{text-align:right}
-.betday-pick b{display:block;font:800 1rem/1.1 Fraunces,Georgia,serif;color:#fff}
-.betday-pick small{display:block;color:#a9d3c6;font-size:.72rem;margin-top:3px}
+.betday-pick b{display:block;font:800 1rem/1.1 Fraunces,Georgia,serif;color:var(--ink)}
+.betday-pick small{display:block;color:var(--muted);font-size:.72rem;margin-top:3px}
 .betday-pick strong{display:block;color:var(--teal);font:800 1.25rem/1 Fraunces,Georgia,serif;margin-top:4px}
 .oddsbar{max-width:720px;margin:10px auto 0;padding:10px 20px 0}
-.oddsbar label{display:flex;justify-content:space-between;color:#a9d3c6;font-size:.82rem;margin-bottom:4px}
+.oddsbar label{display:flex;justify-content:space-between;color:var(--muted);font-size:.82rem;margin-bottom:4px}
 .oddsbar label b{color:var(--gold)}
-.oddsbar input{width:100%;accent-color:#f2c14e}
-.oddsbar small{display:block;color:#7fb3a5;font-size:.7rem;margin-top:2px}
-.warn{max-width:720px;margin:10px auto 0;padding:10px 14px;background:#4a2a24;border:1px solid #a8554a;border-radius:12px;color:#ffd9d3;font-size:.8rem;line-height:1.4}
-.sod{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;margin-top:8px;padding:7px 12px;border-radius:12px;border:1px solid #2b6268;background:#0e3239;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.oddsbar input{width:100%;accent-color:var(--gold)}
+.oddsbar small{display:block;color:var(--muted2);font-size:.7rem;margin-top:2px}
+.warn{max-width:720px;margin:10px auto 0;padding:10px 14px;background:var(--warnbg);border:1px solid var(--warnline);border-radius:12px;color:var(--warnink);font-size:.8rem;line-height:1.4}
+.sod{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;margin-top:8px;padding:7px 12px;border-radius:12px;border:1px solid var(--line3);background:var(--card);color:inherit;font:inherit;text-align:left;cursor:pointer}
 .sod-l{color:var(--gold);font:800 .6rem/1.2 "Work Sans",sans-serif;text-transform:uppercase;letter-spacing:.08em;max-width:74px}
-.sod-t{font-size:.76rem;color:#dcefe8;line-height:1.3}
-.sod-t small{display:block;color:#8fb9ad;font-size:.68rem}
+.sod-t{font-size:.76rem;color:var(--soft);line-height:1.3}
+.sod-t small{display:block;color:var(--muted2);font-size:.68rem}
 .sod-o{color:var(--teal);font:800 1.05rem Fraunces,Georgia,serif}
-.pickbox{margin:12px 0 0;background:#0e3239;border:1px solid #23555c;border-radius:18px;padding:12px 14px}
-.pickbox h3{margin:0 0 6px;color:#fff;font:800 1rem/1.2 Fraunces,Georgia,serif}
-.pickbox.bog{border-color:#f2c14e77;background:linear-gradient(135deg,#17393a,#0e3239)}
+.pickbox{margin:12px 0 0;background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:12px 14px}
+.pickbox h3{margin:0 0 6px;color:var(--ink);font:800 1rem/1.2 Fraunces,Georgia,serif}
+.pickbox.bog{border-color:var(--goldline);background:linear-gradient(135deg,var(--card4),var(--card))}
 .pickbox.bog h3{color:var(--gold)}
-.pickrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border-top:1px solid #1d4a50;padding:8px 0;color:#a9d3c6;font-size:.86rem}
-.pickrow b{color:#fff;font-weight:700}
-.pickrow span{text-align:right;color:#8dc0b1;font-variant-numeric:tabular-nums}
-.pickrow.pickable{width:100%;background:none;border:0;border-top:1px solid #1d4a50;cursor:pointer;text-align:left;font:inherit}
-.pickrow.pickable.sel{background:#173d43;border-radius:10px}
+.pickrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border-top:1px solid var(--line);padding:8px 0;color:var(--muted);font-size:.86rem}
+.pickrow b{color:var(--ink);font-weight:700}
+.pickrow span{text-align:right;color:var(--muted2);font-variant-numeric:tabular-nums}
+.pickrow.pickable{width:100%;background:none;border:0;border-top:1px solid var(--line);cursor:pointer;text-align:left;font:inherit}
+.pickrow.pickable.sel{background:var(--sel);border-radius:10px}
 .pickrow .pp{display:inline-block;margin-right:8px}
-.betslip{max-width:720px;margin:16px auto 0;background:#0e3239;border:1px solid #2b6268;border-radius:18px;padding:14px}
-.betslip h3{margin:0;color:#fff;font:800 1.15rem/1 Fraunces,Georgia,serif}
-.slipsub{color:#8fb9ad;font-size:.76rem;margin:4px 0 10px}
+.betslip{max-width:720px;margin:16px auto 0;background:var(--card);border:1px solid var(--line3);border-radius:18px;padding:14px}
+.betslip h3{margin:0;color:var(--ink);font:800 1.15rem/1 Fraunces,Georgia,serif}
+.slipsub{color:var(--muted2);font-size:.76rem;margin:4px 0 10px}
 .sliplegs{display:grid;gap:7px}
-.slipleg{border:1px solid #26535a;border-radius:10px;padding:8px 10px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
-.slipleg b{font-size:.8rem;color:#fff}.slipleg small{display:block;color:#8fb9ad}.slipleg button{border:0;background:none;color:#e7a19a;font-size:1rem;cursor:pointer}
-.slipbottom{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;border-top:1px solid #1d4a50;padding-top:12px}
-.slipbottom label{display:block;color:#8fb9ad;font-size:.7rem;margin-bottom:4px}.slipbottom input{width:100%;background:#09262c;border:1px solid #315e63;color:#fff;border-radius:9px;padding:9px}
-.slipreturn{align-self:end;text-align:right;color:#8fb9ad;font-size:.72rem}.slipreturn b{display:block;color:var(--teal);font:800 1.2rem Fraunces,Georgia,serif}
-.why{color:#8fb9ad;font-size:.74rem;margin:8px 0 0;line-height:1.4}
+.slipleg{border:1px solid var(--line2);border-radius:10px;padding:8px 10px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.slipleg b{font-size:.8rem;color:var(--ink)}.slipleg small{display:block;color:var(--muted2)}.slipleg button{border:0;background:none;color:var(--bad);font-size:1rem;cursor:pointer}
+.slipbottom{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.slipbottom label{display:block;color:var(--muted2);font-size:.7rem;margin-bottom:4px}.slipbottom input{width:100%;background:var(--field);border:1px solid var(--line3);color:var(--ink);border-radius:9px;padding:9px}
+.slipreturn{align-self:end;text-align:right;color:var(--muted2);font-size:.72rem}.slipreturn b{display:block;color:var(--teal);font:800 1.2rem Fraunces,Georgia,serif}
+.why{color:var(--muted2);font-size:.74rem;margin:8px 0 0;line-height:1.4}
 .stage{max-width:720px;margin:0 auto;padding:18px 20px 8px;display:flex;flex-direction:column;min-height:calc(100svh - 140px)}
-.meta{display:flex;justify-content:space-between;gap:10px;color:#a9d3c6;font-size:.95rem;margin-bottom:12px}
+.meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.95rem;margin-bottom:12px}
 .panels{display:flex;flex-direction:column;gap:8px;min-height:300px;height:300px}
 .pn{flex:1 1 0;min-height:92px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:#fff;border:3px solid transparent;border-radius:22px;padding:12px 18px 14px;cursor:pointer;font:inherit;transition:flex-grow .7s cubic-bezier(.2,.8,.2,1)}
-.pn[aria-pressed="true"]{border-color:#fff}
+.pn[aria-pressed="true"]{border-color:var(--ink)}
 .tg{display:flex;gap:6px;min-height:22px}
 .tg i{font:600 .72rem "Work Sans",sans-serif;font-style:normal;background:#0b2a31b0;color:#fff;border-radius:999px;padding:2px 10px}
 .tg i.y{background:#fff;color:#0b2a31}
 .row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
 .row b{font:800 clamp(1.5rem,7vw,2.8rem)/1 Fraunces,Georgia,serif;letter-spacing:-.02em}
 .row em{font:800 clamp(2rem,10vw,4.2rem)/.9 Fraunces,Georgia,serif;font-style:normal;font-variant-numeric:tabular-nums}
-.fair{color:#a9d3c6;margin:12px 0 0;text-align:center;font-size:.95rem}
-.fair b{color:#fff}
+.fair{color:var(--muted);margin:12px 0 0;text-align:center;font-size:.95rem}
+.fair b{color:var(--ink)}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px}
-.nav button{width:54px;height:54px;border-radius:50%;border:2px solid #2f5b58;background:none;color:#fff;font-size:1.8rem;line-height:1;cursor:pointer}
+.nav button{width:54px;height:54px;border-radius:50%;border:2px solid var(--line4);background:none;color:var(--ink);font-size:1.8rem;line-height:1;cursor:pointer}
 .dots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
-.dots i{width:9px;height:9px;border-radius:50%;background:#2f5b58}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line4)}
 .dots i.on{background:var(--coral);transform:scale(1.35)}
-.fine{max-width:720px;margin:26px auto 0;padding:20px 20px 24px;border-top:1px solid #1d4a50;color:#8dc0b1;font-size:.88rem}
+.fine{max-width:720px;margin:26px auto 0;padding:20px 20px 24px;border-top:1px solid var(--line);color:var(--muted2);font-size:.88rem}
 .pans{max-width:1100px;margin:26px auto 0;padding:0 20px}
 .strip{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;align-items:stretch}
-.pn2{flex:0 0 min(84vw,330px);scroll-snap-align:start;background:#0e3239;border:1px solid #23555c;border-radius:20px;padding:14px 14px 10px}
+.pn2{flex:0 0 min(84vw,330px);scroll-snap-align:start;background:var(--card);border:1px solid var(--line2);border-radius:20px;padding:14px 14px 10px}
 @media(min-width:1000px){.pn2{flex:1 1 0}.hint{display:none}}
 .pn2 h2{font:800 1.3rem/1 Fraunces,Georgia,serif;letter-spacing:-.02em;margin:0}
-.cap{color:#a9d3c6;font-size:.78rem;margin:4px 0 10px}
-.cap input{width:66px;font:inherit;color:#fff;background:#0f373d;border:1px solid #2f5b58;border-radius:8px;padding:2px 6px;margin-left:4px}
-.hint{color:#7fb3a5;font-size:.8rem;margin:2px 0 0;text-align:right}
+.cap{color:var(--muted);font-size:.78rem;margin:4px 0 10px}
+.cap input{width:66px;font:inherit;color:var(--ink);background:var(--field2);border:1px solid var(--line4);border-radius:8px;padding:2px 6px;margin-left:4px}
+.hint{color:var(--muted2);font-size:.8rem;margin:2px 0 0;text-align:right}
 .rg{display:grid;grid-template-columns:32px repeat(6,1fr);gap:1px 3px;font-size:.72rem;align-items:center;text-align:right}
-.rg .hh{color:#7fb3a5;font-size:.65rem}
+.rg .hh{color:var(--muted2);font-size:.65rem}
 .rg .ol{text-align:left;font:800 .95rem Fraunces,Georgia,serif}
-.rg .pr{color:#8dc0b1;font-size:.62rem;margin-bottom:7px}
-.ra{color:var(--coral)}.rb{color:var(--teal)}.rc{color:#a9d3c6}
-.tr,.ac{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid #1d4a50;color:inherit;font:inherit;padding:7px 0;cursor:pointer}
+.rg .pr{color:var(--muted2);font-size:.62rem;margin-bottom:7px}
+.ra{color:var(--coral)}.rb{color:var(--teal)}.rc{color:var(--muted)}
+.tr,.ac{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);color:inherit;font:inherit;padding:7px 0;cursor:pointer}
 .ac{grid-template-columns:1fr auto}
 .tr .n{font:800 1.05rem Fraunces,Georgia,serif;color:var(--coral);width:14px}
 .nm b{display:block;font-size:.92rem;line-height:1.2}
-.nm small{display:block;color:#a9d3c6;font-size:.72rem;line-height:1.25}
-.pv{text-align:right}.pv b{display:block;font:800 1.05rem Fraunces,Georgia,serif;line-height:1.1}.pv small{color:#a9d3c6;font-size:.7rem}
+.nm small{display:block;color:var(--muted);font-size:.72rem;line-height:1.25}
+.pv{text-align:right}.pv b{display:block;font:800 1.05rem Fraunces,Georgia,serif;line-height:1.1}.pv small{color:var(--muted);font-size:.7rem}
 @media(prefers-reduced-motion:reduce){.pn{transition:none}}
 .trk{max-width:720px;margin:0 auto;padding:20px 20px 60px}
-.trk a.back{color:#a9d3c6;text-decoration:none;font-size:.92rem}
+.trk a.back{color:var(--muted);text-decoration:none;font-size:.92rem}
 .trk h2{font:800 clamp(1.9rem,7vw,2.6rem) Fraunces,Georgia,serif;margin:16px 0 10px}
-.trk h3{font:800 1.15rem Fraunces,Georgia,serif;margin:20px 0 4px;color:#fff}
+.trk h3{font:800 1.15rem Fraunces,Georgia,serif;margin:20px 0 4px;color:var(--ink)}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.stat{background:#0e3239;border:1px solid #23555c;border-radius:16px;padding:12px 14px}
-.stat small{display:block;color:#a9d3c6;font-size:.72rem}
-.stat b{font:800 1.7rem/1.1 Fraunces,Georgia,serif;color:#fff}
-.prow{background:#0e3239;border:1px solid #23555c;border-radius:14px;padding:10px 12px;margin-top:10px}
-.prow b{display:block;font-size:.9rem;color:#fff}
-.prow small{display:block;color:#8fb9ad;font-size:.74rem}
+.stat{background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:12px 14px}
+.stat small{display:block;color:var(--muted);font-size:.72rem}
+.stat b{font:800 1.7rem/1.1 Fraunces,Georgia,serif;color:var(--ink)}
+.prow{background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:10px 12px;margin-top:10px}
+.prow b{display:block;font-size:.9rem;color:var(--ink)}
+.prow small{display:block;color:var(--muted2);font-size:.74rem}
 .prow small b{display:inline;font-size:inherit}
 .prow .rb2{display:flex;gap:8px;margin-top:8px;align-items:center}
-.prow button{font:600 .78rem "Work Sans",sans-serif;color:#dff3ec;background:none;border:1px solid #2b6268;border-radius:999px;padding:5px 14px;cursor:pointer}
+.prow button{font:600 .78rem "Work Sans",sans-serif;color:var(--soft);background:none;border:1px solid var(--line3);border-radius:999px;padding:5px 14px;cursor:pointer}
 .prow button.on.w{background:#7fd6a4;color:#0b2a31;border-color:#7fd6a4}
 .prow button.on.l{background:#e7a19a;color:#0b2a31;border-color:#e7a19a}
 .prow span{margin-left:auto;color:var(--teal);font-weight:700;font-size:.85rem}
 .chips{max-width:720px;margin:12px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap}
-.chips button{font:600 .78rem "Work Sans",sans-serif;color:#dff3ec;background:#0e3239;border:1px solid #2b6268;border-radius:999px;padding:7px 14px;cursor:pointer}
-.chips button[aria-pressed="true"]{background:#e6f4ef;color:#0b2a31;border-color:#e6f4ef}
-.mdl{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;font-size:.8rem;color:#a9d3c6;align-items:baseline}
-.mdl b{color:#fff;font-weight:700}.mdl .h{color:#7fb3a5;font-size:.68rem}.mdl span:not(.h){text-align:right;font-variant-numeric:tabular-nums}
-.sum{margin:10px 0 0;text-align:center;color:#a9d3c6;font-size:.88rem;line-height:1.45}.sum b{color:#fff}
-.bigbtn{display:block;width:100%;margin:12px 0 0;padding:13px;border-radius:14px;border:1px solid #2b6268;background:#0e3239;color:#fff;font:600 .95rem "Work Sans",sans-serif;cursor:pointer}
-.rcard{background:#0e3239;border:1px solid #23555c;border-radius:18px;padding:12px 14px;margin-top:14px}
-.rcard h3{margin:0;color:#fff;font:800 1.15rem Fraunces,Georgia,serif}
-.rcard .rs{color:#a9d3c6;font-size:.8rem;margin:3px 0 8px}
-.rleg{display:grid;grid-template-columns:1fr auto;gap:10px;border-top:1px solid #1d4a50;padding:7px 0;font-size:.82rem}
-.rleg b{color:#fff;display:block}.rleg small{color:#8fb9ad}.rleg span{text-align:right;color:#a9d3c6;font-variant-numeric:tabular-nums}
+.chips button{font:600 .78rem "Work Sans",sans-serif;color:var(--soft);background:var(--card);border:1px solid var(--line3);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--onbg);color:var(--onfg);border-color:var(--onbg)}
+.mdl{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 14px;font-size:.8rem;color:var(--muted);align-items:baseline}
+.mdl b{color:var(--ink);font-weight:700}.mdl .h{color:var(--muted2);font-size:.68rem}.mdl span:not(.h){text-align:right;font-variant-numeric:tabular-nums}
+.sum{margin:10px 0 0;text-align:center;color:var(--muted);font-size:.88rem;line-height:1.45}.sum b{color:var(--ink)}
+.bigbtn{display:block;width:100%;margin:12px 0 0;padding:13px;border-radius:14px;border:1px solid var(--line3);background:var(--card);color:var(--ink);font:600 .95rem "Work Sans",sans-serif;cursor:pointer}
+.rcard{background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:12px 14px;margin-top:14px}
+.rcard h3{margin:0;color:var(--ink);font:800 1.15rem Fraunces,Georgia,serif}
+.rcard .rs{color:var(--muted);font-size:.8rem;margin:3px 0 8px}
+.rleg{display:grid;grid-template-columns:1fr auto;gap:10px;border-top:1px solid var(--line);padding:7px 0;font-size:.82rem}
+.cnt{opacity:.65;margin-left:6px;font-weight:400}
+.grp{margin-top:6px}
+.rleg b{color:var(--ink);display:block}.rleg small{color:var(--muted2)}.rleg span{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
 <div class="bar"><div class="w"><div class="toprow"><h1>Call it.</h1><nav><a href="#rollover" id="rolllink">Rollover</a><a href="#tracker" id="tracklink">Tracker</a><a href="#about" id="aboutlink">How odds work</a></nav></div></div></div>
 <div class="chips" id="chips" role="group" aria-label="Filter matches"></div>
+<div class="chips" id="dayChips" role="group" aria-label="Filter by day" style="margin-top:8px"></div>
 <div class="why" id="status" style="max-width:720px;margin:6px auto 0;padding:0 20px"></div>
 <div class="warn" id="warn" hidden></div>
 <div class="oddsbar" id="oddsbar"><label for="minodds"><span>Aiming for odds of at least</span><b id="minoddsv">1.18</b></label><input type="range" id="minodds" min="1.10" max="2.00" step="0.01" value="1.18" aria-label="Minimum odds per pick"><small>Sets the odds floor for the picks on each match. Picks need a 50%+ chance, so the top end is 2.00.</small></div>
@@ -159,6 +173,7 @@ h1{font:800 clamp(2.4rem,9vw,3.4rem)/1 Fraunces,Georgia,serif;letter-spacing:-.0
 </article>
 <article class="trk" id="trackPage" hidden></article>
 <article class="trk" id="rollPage" hidden></article>
+<article class="trk" id="mktPage" hidden></article>
 <div class="pans" id="pans"><div class="strip">
 <section class="pn2" aria-label="Rollover"><h2>Rollover</h2><p class="cap">5 rolls · start <input id="rs" type="number" min="1" value="100" aria-label="Starting amount"></p><div id="roll"></div></section>
 <section class="pn2" aria-label="Top bets"><h2>Top bets</h2><p class="cap">Most likely winners. Tap to open.</p><div id="topc"></div></section>
@@ -168,7 +183,7 @@ h1{font:800 clamp(2.4rem,9vw,3.4rem)/1 Fraunces,Georgia,serif;letter-spacing:-.0
 <script>
 /* g = [player1, player2, start, [p1%, p2%], label, pick, id]
    pick.cards = {winner,hcap,total,combo,best,exp}; pick.opts = every candidate pick {k,mk,l,p,o} */
-var ALL=[],G=[],META=null,filt={cat:"all",pickem:false};
+var ALL=[],G=[],META=null,filt={cat:"all",day:"all",pickem:false},tries=0;
 const MIN_LEG=1.18,BOD_MIN=1.5,SOD_MIN=1.3,DAY_LEGS=3;
 const MATCH_MS=3*3600e3;                       /* a match is treated as played 3 hours after its start */
 const fresh=g=>Date.parse(g[2])+MATCH_MS>Date.now();
@@ -249,7 +264,7 @@ function dayPick(store,minC,maxLegs){
   return b
 }
 function toSlip(L){slip=L.map(l=>({key:l.key,match:l.match,market:l.market,pick:l.pick,odds:l.odds}));slipSave();
-  filt.cat="all";filt.pickem=false;applyFilter(false);
+  filt.cat="all";filt.day="all";filt.pickem=false;applyFilter(false);
   const gi=G.findIndex(g=>g[6]===L[0].id);i=Math.max(0,gi);route("/"+i);
   setTimeout(()=>{const e=$("betslip");if(e)e.scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})},150)}
 function renderBetDay(){
@@ -272,17 +287,17 @@ function renderBetDay(){
 
 /* ===== BET SLIP ===== */
 const slipSave=()=>lsSet("betslip",slip);
-function addSlip(item){if(slip.some(x=>x.key===item.key))slip=slip.filter(x=>x.key!==item.key);else slip.push(item);slipSave();renderSlip();drawCards()}
+function addSlip(item){if(slip.some(x=>x.key===item.key))slip=slip.filter(x=>x.key!==item.key);else slip.push(item);slipSave();renderSlip();drawCards();if(view==="mkts")renderMarkets()}
 function renderSlip(){
   const el=$("betslip");if(!el)return;
   const stake=+(($("slipstake")||{}).value||100),odds=slip.reduce((a,x)=>a*x.odds,1);
-  el.innerHTML='<h3>Bet slip <span style="float:right;color:#8fb9ad;font:600 .72rem Work Sans,sans-serif">'+slip.length+' pick'+(slip.length===1?'':'s')+'</span></h3><div class="slipsub">Tap a pick to add or remove it.</div><div class="sliplegs">'+(slip.length?slip.map(x=>'<div class="slipleg"><div><b>'+esc(x.pick)+'</b><small>'+esc(x.match)+' · '+esc(x.market)+'</small></div><div><button data-remove="'+x.key+'" aria-label="Remove pick">×</button><small>'+x.odds.toFixed(2)+'</small></div></div>').join(''):'<div class="why">No picks selected yet.</div>')+'</div><div class="slipbottom"><div><label>STAKE</label><input id="slipstake" type="number" min="1" value="'+stake+'"></div><div class="slipreturn">Combined odds '+(slip.length?odds.toFixed(2):'—')+'<b>₦'+(slip.length?(stake*odds).toFixed(2):'0.00')+'</b></div></div>';
+  el.innerHTML='<h3>Bet slip <span style="float:right;color:var(--muted2);font:600 .72rem Work Sans,sans-serif">'+slip.length+' pick'+(slip.length===1?'':'s')+'</span></h3><div class="slipsub">Tap a pick to add or remove it.</div><div class="sliplegs">'+(slip.length?slip.map(x=>'<div class="slipleg"><div><b>'+esc(x.pick)+'</b><small>'+esc(x.match)+' · '+esc(x.market)+'</small></div><div><button data-remove="'+x.key+'" aria-label="Remove pick">×</button><small>'+x.odds.toFixed(2)+'</small></div></div>').join(''):'<div class="why">No picks selected yet.</div>')+'</div><div class="slipbottom"><div><label>STAKE</label><input id="slipstake" type="number" min="1" value="'+stake+'"></div><div class="slipreturn">Combined odds '+(slip.length?odds.toFixed(2):'—')+'<b>₦'+(slip.length?(stake*odds).toFixed(2):'0.00')+'</b></div></div>';
   el.querySelectorAll("[data-remove]").forEach(b=>{b.onclick=()=>{slip=slip.filter(x=>x.key!==b.dataset.remove);slipSave();renderSlip();drawCards()}});
   $("slipstake").oninput=renderSlip
 }
 function fillSlip(L){
   slip=L.map(legItem);slipSave();
-  filt.cat="all";filt.pickem=false;applyFilter(false);
+  filt.cat="all";filt.day="all";filt.pickem=false;applyFilter(false);
   const gi=G.findIndex(g=>g[6]===L[0].g[6]);i=Math.max(0,gi);route("/"+i);
   setTimeout(()=>{const b=$("betslip");if(b)b.scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})},150)
 }
@@ -292,7 +307,7 @@ function route(h){routed=h;try{location.hash=h}catch(e){}apply(h)}
 function setView(v){
   view=v;
   const show=(id,on)=>{const el=$(id);if(el)el.hidden=!on};
-  show("aboutPage",v==="about");show("trackPage",v==="track");show("rollPage",v==="roll");show("chips",v==="main"||v==="roll");show("status",v==="main"||v==="roll");
+  show("aboutPage",v==="about");show("trackPage",v==="track");show("rollPage",v==="roll");show("mktPage",v==="mkts");show("chips",v==="main"||v==="roll");show("dayChips",v==="main"||v==="roll");show("status",v==="main"||v==="roll");
   ["st","betday","pans","fine","oddsbar"].forEach(id=>show(id,v==="main"))
 }
 function go(d){if(!G.length)return;i=(i+d+G.length)%G.length;route("/"+i)}
@@ -300,6 +315,8 @@ function apply(h){
   if(h==="about"){setView("about");scrollTo(0,0);return}
   if(h==="tracker"){setView("track");renderTracker();scrollTo(0,0);return}
   if(h==="rollover"){setView("roll");renderRoll();scrollTo(0,0);return}
+  const mk=h.match(/^markets\/(\d+)$/);
+  if(mk){i=Math.max(0,Math.min(+mk[1],G.length-1));setView("mkts");renderMarkets();scrollTo(0,0);return}
   const was=view!=="main";setView("main");if(was)scrollTo(0,0);
   const m=h.match(/^\/(\d+)$/);if(m)i=Math.max(0,Math.min(+m[1],G.length-1));
   renderBetDay();render(true)
@@ -312,7 +329,7 @@ const ITEMS={};
 function pickRow(x,tail){
   ITEMS[x.key]=x;
   const sel=slip.some(s=>s.key===x.key);
-  return'<button class="pickrow pickable '+(sel?'sel':'')+'" data-key="'+x.key+'"><b>'+esc(x.pick)+(tail?'<small style="display:block;color:#8fb9ad;font-weight:400">'+tail+'</small>':'')+'</b><span><span class="pp">'+x.prob.toFixed(1)+'%</span>'+x.odds.toFixed(2)+'</span></button>'
+  return'<button class="pickrow pickable '+(sel?'sel':'')+'" data-key="'+x.key+'"><b>'+esc(x.pick)+(tail?'<small style="display:block;color:var(--muted2);font-weight:400">'+tail+'</small>':'')+'</b><span><span class="pp">'+x.prob.toFixed(1)+'%</span>'+x.odds.toFixed(2)+'</span></button>'
 }
 function wirePicks(root,g){
   root.querySelectorAll("[data-key]").forEach(b=>{b.onclick=()=>{const x=ITEMS[b.dataset.key];if(x)addSlip({key:x.key,match:g[0]+" vs "+g[1],market:x.market,pick:x.pick,odds:x.odds})}})
@@ -329,7 +346,7 @@ function cardsHtml(g){
   h+='<div class="pickbox"><h3>Game handicap</h3>'+row(C.hcap)+'</div>';
   h+='<div class="pickbox"><h3>Set handicap</h3>'+row(C.sethc,tl(C.sethc))+(hasSet&&C.sethc&&C.sethc.mod?'<p class="why">With no set line posted, only the protection side (+1.5 sets) is offered.</p>':'')+'</div>';
   const cu=c=>c&&c.cush!=null&&c.cush>0?c.cush.toFixed(1)+' games of cushion':"";
-  h+='<div class="pickbox"><h3>Total games</h3><p class="why" style="margin:0 0 4px">Expected total: <b style="color:#fff">'+(t.exp==null?"—":t.exp.toFixed(1))+'</b> games</p>'+(C.over||C.under?(C.over?pickRow(cardItem(g,C.over),cu(C.over)):'')+(C.under?pickRow(cardItem(g,C.under),cu(C.under)):''):none)+'</div>';
+  h+='<div class="pickbox"><h3>Total games</h3><p class="why" style="margin:0 0 4px">Expected total: <b style="color:var(--ink)">'+(t.exp==null?"—":t.exp.toFixed(1))+'</b> games</p>'+(C.over||C.under?(C.over?pickRow(cardItem(g,C.over),cu(C.over)):'')+(C.under?pickRow(cardItem(g,C.under),cu(C.under)):''):none)+'</div>';
   h+='<div class="pickbox"><h3>First set total</h3>'+row(C.set1,tl(C.set1))+'</div>';
   h+='<div class="pickbox"><h3>Second set total</h3>'+row(C.set2,tl(C.set2))+'</div>';
   h+='<div class="pickbox"><h3>Player totals</h3>'+(C.ph||C.pa?(C.ph?pickRow(cardItem(g,C.ph),tl(C.ph)):'')+(C.pa?pickRow(cardItem(g,C.pa),tl(C.pa)):''):none)+'<p class="why">Each player\'s own games won in the match.</p></div>';
@@ -345,7 +362,7 @@ function modelBox(g){
    +row(t.src==="Pinnacle moneyline"?"Pinnacle moneyline":"Est. bookmaker moneyline",t.odds[0].toFixed(2),t.odds[1].toFixed(2))
    +row("Hold chance",M.holds[0]+"%",M.holds[1]+"%")
    +row("Confidence",esc(t.prediction),"")
-   +(M.three==null?"":row("Three-set chance",M.three+"%",M.threeMkt==null?"no line":"market "+M.threeMkt+"%")+row("Serve level",M.S,"")+(M.tb1==null?"":row("First-set tiebreak",M.tb1+"%",""))+'<b>Anchored by</b><span style="grid-column:2/4;text-align:right">'+esc(M.anchor)+'</span>')
+   +(M.three==null?"":row("Three-set chance",M.three+"%",M.threeMkt==null?"no line":"market "+M.threeMkt+"%")+row("Serve level",M.S,"")+(M.tb1==null?"":row("First-set tiebreak",M.tb1+"%","")))
    +'<b>Expected total games</b><span>'+(M.medTotal==null?M.total.toFixed(1):M.medTotal.toFixed(1))+'</span><span>market '+M.mktTotal.toFixed(1)+'</span></div></div>'
 }
 function render(anim){
@@ -357,10 +374,11 @@ function render(anim){
   h+='</div>';
   if(M){const med=M.medSpread==null?M.spread:M.medSpread,who=med>=0?g[0]:g[1];
     h+='<p class="sum">'+(Math.abs(med)<0.3?'Too close to call on games':'Typical result: <b>'+esc(who)+'</b> by about <b>'+Math.abs(med).toFixed(1)+'</b> games')+' · expected total <b>'+(t.exp==null?M.total:t.exp).toFixed(1)+'</b> games</p>'}
-  h+='<div id="cards"></div>';
+  h+='<div id="cards"></div><button class="bigbtn" id="allmk">All markets and model numbers →</button>';
   h+='<section class="betslip" id="betslip" aria-label="Bet slip"></section>'+modelBox(g)+'<div class="nav"><button id="pv" aria-label="Previous match">‹</button><div class="dots" aria-label="Match '+(i+1)+' of '+G.length+'">'+G.map((_,j)=>'<i class="'+(j==i?"on":"")+'"></i>').join('')+'</div><button id="nx" aria-label="Next match">›</button></div><p class="fair" id="mine"></p>';
   $("st").innerHTML=h;
   drawCards();renderSlip();
+  $("allmk").onclick=()=>route("markets/"+i);
   let n=0,ag=0;G.forEach(x=>{const c=calls[x[6]];if(c!==undefined){n++;if(c===topIdx(x))ag++}});
   $("mine").textContent=n?"Your calls: "+n+" of "+G.length+" · With the model: "+ag+" · Against it: "+(n-ag):"Tap a side to make your call. Swipe for the next match.";
   const ps=[].slice.call(document.querySelectorAll(".pn"));
@@ -392,6 +410,43 @@ function buildPanels(){
   document.querySelectorAll("[data-acc]").forEach(b=>{b.onclick=()=>{const c=ACCL[+b.dataset.acc];if(c&&c.L.length)fillSlip(c.L)}})
 }
 
+/* ===== ALL MARKETS PAGE: the full model numbers and every pick the model rates at 50% or better ===== */
+const MK_GROUPS=[["Winner","Winner"],["Handicap","Game handicap"],["Set","Set handicap"],["Total","Total games"],["Set1Total","First set total"],["Set2Total","Second set total"],["PlayerTotal","Player totals"]];
+const tailOf=c=>[c.cush!=null&&c.cush>0?c.cush.toFixed(1)+" games of cushion":"",c.mod?"model estimate, no line posted":"",c.mo?"model only, no moneyline":""].filter(Boolean).join(" · ");
+function renderMarkets(){
+  const el=$("mktPage"),g=G[i];
+  if(!g){el.innerHTML='<a href="#" class="back" id="mkback">← Back to matches</a><p class="why">No match selected.</p>';$("mkback").onclick=e=>{e.preventDefault();route("")};return}
+  const t=g[5],M=t.model||{},all=t.opts||[],row=(l,a,b)=>'<b>'+l+'</b><span>'+a+'</span><span>'+(b==null?"":b)+'</span>';
+  const when=new Date(g[2]).toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+  let h='<a href="#" class="back" id="mkback">← Back to match</a><h2>'+esc(g[0])+' v '+esc(g[1])+'</h2><p class="why">'+when+' · '+esc(g[4])+'</p>';
+  h+='<div class="pickbox"><h3>Model numbers</h3><div class="mdl"><span class="h"></span><span class="h">'+esc(nm(g[0]))+'</span><span class="h">'+esc(nm(g[1]))+'</span>'
+   +row("Win chance",g[3][0]+"%",g[3][1]+"%")
+   +row(t.src==="Pinnacle moneyline"?"Moneyline in the feed":"Est. bookmaker moneyline",t.odds[0].toFixed(2),t.odds[1].toFixed(2))
+   +(M.holds?row("Hold chance",M.holds[0]+"%",M.holds[1]+"%"):"")
+   +row("Confidence",esc(t.prediction),"")
+   +(M.three==null?"":row("Three-set chance",M.three+"%",M.threeMkt==null?"no line":"line "+M.threeMkt+"%"))
+   +(M.tb1==null?"":row("First-set tiebreak",M.tb1+"%",""))
+   +(M.S==null?"":row("Serve level",M.S,""))
+   
+   +(M.medTotal==null?"":row("Expected total games",M.medTotal.toFixed(1),"line "+M.mktTotal.toFixed(1)))
+   +(M.fit?row("Fit error (handicap / total)",M.fit.errM+" / "+M.fit.errT+" pts",""):"")
+   +(M.ttGap==null?"":row("Player-games lines gap",M.ttGap+" pts",""))
+   +(M.rate?row("Player ratings say","serve "+M.rate.sA.toFixed(2)+" / "+M.rate.sB.toFixed(2),"win "+M.rate.pH+"%"):"")
+   +'</div>'+(M.anchor?'<p class="why">Serve level anchored by: '+esc(M.anchor)+'</p>':'')+'</div>';
+  const n=all.length;
+  h+='<p class="why">'+n+' picks at 50% or better, grouped by market. Tap a row to add it to your bet slip. Odds are fair odds.</p>';
+  MK_GROUPS.forEach(([mk,title])=>{
+    const rows=all.filter(o=>o.mk===mk).sort((a,b)=>b.p-a.p);if(!rows.length)return;
+    h+='<div class="pickbox grp"><h3>'+title+' <span class="cnt">'+rows.length+'</span></h3>'+rows.map(o=>pickRow(cardItem(g,o),tailOf(o))).join("")+'</div>'
+  });
+  const so=slip.reduce((a,x)=>a*x.odds,1);
+  h+='<button class="bigbtn" id="mkslip">Bet slip: '+slip.length+' pick'+(slip.length===1?'':'s')+(slip.length?' · combined odds '+so.toFixed(2):'')+' · view</button>';
+  el.innerHTML=h;
+  $("mkback").onclick=e=>{e.preventDefault();route("/"+i)};
+  $("mkslip").onclick=()=>{route("/"+i);setTimeout(()=>{const b=$("betslip");if(b)b.scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})},150)};
+  wirePicks(el,g)
+}
+
 /* ===== ROLLOVER PAGE: the safest pick of each match, chained until the combined odds reach a target ===== */
 function renderRoll(){
   const el=$("rollPage");
@@ -399,7 +454,7 @@ function renderRoll(){
   if(!bestLegs(MIN_LEG,false).length)h+='<p class="why">No matches to build from right now.</p>';
   ACCS.forEach(T=>{
     const c=chainFor(T),L=c.L;let run=1;
-    h+='<div class="rcard"><h3>Rollover to '+T.toFixed(2)+(c.ok?'':'+')+'</h3><p class="rs">'+L.length+' pick'+(L.length===1?'':'s')+' · combined odds <b style="color:#fff">'+oddsOf(L).toFixed(2)+'</b> · chance all land <b style="color:#fff">'+pc(chanceOf(L)*100)+'%</b>'+(c.ok?'':' · not enough matches to reach '+T+' today')+'</p>'
+    h+='<div class="rcard"><h3>Rollover to '+T.toFixed(2)+(c.ok?'':'+')+'</h3><p class="rs">'+L.length+' pick'+(L.length===1?'':'s')+' · combined odds <b style="color:var(--ink)">'+oddsOf(L).toFixed(2)+'</b> · chance all land <b style="color:var(--ink)">'+pc(chanceOf(L)*100)+'%</b>'+(c.ok?'':' · not enough matches to reach '+T+' today')+'</p>'
      +L.map(l=>{run*=l.x.odds;return'<div class="rleg"><div><b>'+esc(l.x.pick)+'</b><small>'+esc(l.g[0])+' vs '+esc(l.g[1])+' · '+esc(l.x.market)+'</small></div><span>'+l.p+'%<br>'+l.x.odds.toFixed(2)+' · total '+run.toFixed(2)+'</span></div>'}).join('')
      +(L.length?'<button class="bigbtn" data-roll="'+T+'">Add all '+L.length+' to bet slip</button>':'')+'</div>'
   });
@@ -439,7 +494,7 @@ function renderTracker(){
    +'<p class="why">'+preds.length+' prediction'+(preds.length===1?'':'s')+' stored, '+toMark+' played and waiting for you to mark Won or Lost. Predictions are never deleted.</p>';
   h+='<h3>Calibration</h3><p class="why">Of the picks called in each range, how many actually won. A well-calibrated model wins about as often as its range says.</p>'+calib();
   h+='<h3>Predictions</h3>';
-  h+=preds.slice().sort((a,b)=>(played(b)&&!b.res)-(played(a)&&!a.res)||new Date(b.when)-new Date(a.when)).map(p=>'<div class="prow"><b>'+esc(p.match)+'</b><small>'+esc(p.market)+(p.prob?' · '+p.prob+'%':'')+' · '+new Date(p.when).toLocaleDateString(undefined,{month:"short",day:"numeric"})+' · '+(played(p)?'<b style="color:#7fd6a4">played</b>':'<b style="color:#f2c14e">not played yet</b>')+'</small><div class="rb2"><button class="w'+(p.res==="won"?' on':'')+'" data-id="'+esc(p.id)+'" data-r="won">Won</button><button class="l'+(p.res==="lost"?' on':'')+'" data-id="'+esc(p.id)+'" data-r="lost">Lost</button><span>'+(p.odds?p.odds.toFixed(2):'no price')+'</span></div></div>').join('');
+  h+=preds.slice().sort((a,b)=>(played(b)&&!b.res)-(played(a)&&!a.res)||new Date(b.when)-new Date(a.when)).map(p=>'<div class="prow"><b>'+esc(p.match)+'</b><small>'+esc(p.market)+(p.prob?' · '+p.prob+'%':'')+' · '+new Date(p.when).toLocaleDateString(undefined,{month:"short",day:"numeric"})+' · '+(played(p)?'<b style="color:var(--good)">played</b>':'<b style="color:var(--gold)">not played yet</b>')+'</small><div class="rb2"><button class="w'+(p.res==="won"?' on':'')+'" data-id="'+esc(p.id)+'" data-r="won">Won</button><button class="l'+(p.res==="lost"?' on':'')+'" data-id="'+esc(p.id)+'" data-r="lost">Lost</button><span>'+(p.odds?p.odds.toFixed(2):'no price')+'</span></div></div>').join('');
   $("trackPage").innerHTML=h;
   $("trkback").onclick=e=>{e.preventDefault();route("/"+i)};
   $("trackPage").querySelectorAll("[data-id]").forEach(b=>{b.onclick=()=>{const p=preds.find(x=>x.id===b.dataset.id);if(!p)return;p.res=p.res===b.dataset.r?"":b.dataset.r;lsSet("ci_preds",preds);renderTracker()}})
@@ -461,36 +516,52 @@ $("rolllink").onclick=e=>{e.preventDefault();route("rollover")};
 
 /* ===== START ===== */
 const CATS=[["all","All"],["ATP 1000","ATP 1000"],["WTA 1000","WTA 1000"],["Tour","Other tour"],["Challenger","Challengers"]];
+const dayOf=g=>{const d=new Date(g[2]);return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()};
+function dayLabel(k){
+  const g=ALL.find(x=>dayOf(x)===k);if(!g)return k;
+  const d=new Date(g[2]),n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime(),s=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(),diff=Math.round((s-t)/864e5);
+  return diff===0?"Today":diff===1?"Tomorrow":d.toLocaleDateString(undefined,{weekday:"short",day:"numeric"})
+}
+/* does a match pass the filters? "skip" leaves one filter out so its chips can show the counts they would give */
+const passes=(g,skip)=>(skip==="cat"||filt.cat==="all"||g[5].cat===filt.cat)&&(skip==="day"||filt.day==="all"||dayOf(g)===filt.day)&&(skip==="pick"||!filt.pickem||g[5].pickem);
 function renderChips(){
-  $("chips").innerHTML=CATS.map(c=>'<button data-c="'+c[0]+'" aria-pressed="'+(filt.cat===c[0])+'">'+c[1]+'</button>').join("")+'<button data-p="1" aria-pressed="'+filt.pickem+'">Pick-em 1.70–2.50</button>';
+  const cnt=n=>'<span class="cnt">'+n+'</span>';
+  $("chips").innerHTML=CATS.map(c=>'<button data-c="'+c[0]+'" aria-pressed="'+(filt.cat===c[0])+'">'+c[1]+cnt(ALL.filter(g=>passes(g,"cat")&&(c[0]==="all"||g[5].cat===c[0])).length)+'</button>').join("")
+    +'<button data-p="1" aria-pressed="'+filt.pickem+'">Pick-em 1.70–2.50'+cnt(ALL.filter(g=>passes(g,"pick")&&g[5].pickem).length)+'</button>';
   $("chips").querySelectorAll("[data-c]").forEach(b=>{b.onclick=()=>{filt.cat=b.dataset.c;applyFilter(false)}});
-  $("chips").querySelector("[data-p]").onclick=()=>{filt.pickem=!filt.pickem;applyFilter(false)}
+  $("chips").querySelector("[data-p]").onclick=()=>{filt.pickem=!filt.pickem;applyFilter(false)};
+  const keys=[];ALL.slice().sort((a,b)=>Date.parse(a[2])-Date.parse(b[2])).forEach(g=>{const k=dayOf(g);if(keys.indexOf(k)<0)keys.push(k)});
+  $("dayChips").innerHTML=[["all","All days"]].concat(keys.map(k=>[k,dayLabel(k)])).map(c=>'<button data-d="'+c[0]+'" aria-pressed="'+(filt.day===c[0])+'">'+esc(c[1])+cnt(ALL.filter(g=>passes(g,"day")&&(c[0]==="all"||dayOf(g)===c[0])).length)+'</button>').join("");
+  $("dayChips").querySelectorAll("[data-d]").forEach(b=>{b.onclick=()=>{filt.day=b.dataset.d;applyFilter(false)}})
 }
 function applyFilter(keep){
-  G=ALL.filter(g=>(filt.cat==="all"||g[5].cat===filt.cat)&&(!filt.pickem||g[5].pickem));
+  if(filt.day!=="all"&&!ALL.some(g=>dayOf(g)===filt.day))filt.day="all";
+  G=ALL.filter(g=>passes(g));
   i=keep?Math.min(i,Math.max(0,G.length-1)):0;
   buildPanels();renderChips();
-  if(view==="main"){renderBetDay();render(true)}else if(view==="track")renderTracker();else if(view==="roll")renderRoll()
+  if(view==="main"){renderBetDay();render(true)}else if(view==="track")renderTracker();else if(view==="roll")renderRoll();else if(view==="mkts")renderMarkets()
 }
 const setStatus=t=>{$("status").textContent=t};
-async function load(){
-  setStatus("Loading matches…");
+async function load(again){
+  if(!again)setStatus("Loading matches…");
   try{
     const r=await fetch("/.netlify/functions/compute-odds"),d=await r.json();
     if(!r.ok||!d.matches)throw new Error(d.error||("HTTP "+r.status));
     ALL=d.matches;META=d.meta;const old=!(d.meta&&d.meta.v>=5);$("warn").hidden=!old;if(old)$("warn").textContent='The server is still running an old version of compute-odds.js, so picks cannot be built. Update netlify/functions/compute-odds.js on GitHub, then redeploy with "Clear cache and deploy site".';savePreds();
     ALL=ALL.filter(fresh);
     const sk=Object.keys(d.meta.skipped||{}).length?" · skipped: "+Object.entries(d.meta.skipped).map(e=>e[1]+" "+e[0]).join(", "):"";
-    setStatus(ALL.length+" tour and Challenger matches · lines via Pinnwire · updated "+new Date(d.meta.generated_at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+(d.stale?" (cached: "+d.warning+")":"")+sk)
-  }catch(e){ALL=[];META={};setStatus("Couldn't load matches: "+e.message)}
-  applyFilter(false)
+    const pend=d.meta.pending||0;
+    setStatus(ALL.length+" matches ("+(d.meta.total||ALL.length)+" found) · lines via Pinnwire · updated "+new Date(d.meta.generated_at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+(pend?" · "+pend+" more still being worked out, they will appear on their own":"")+(d.stale?" (cached: "+d.warning+")":"")+sk);
+    if(pend&&tries<12){tries++;setTimeout(()=>load(true),5000)}else tries=0
+  }catch(e){if(!again){ALL=[];META={};setStatus("Couldn't load matches: "+e.message)}else setStatus("Still loading… ("+e.message+")")}
+  applyFilter(!!again)
 }
 $("minodds").value=minO;$("minoddsv").textContent=minO.toFixed(2);
 $("minodds").oninput=e=>{minO=+e.target.value;lsSet("minodds",minO);$("minoddsv").textContent=minO.toFixed(2);drawCards()};
 /* every 5 minutes, drop matches that started more than 3 hours ago (they stay in the tracker) */
 setInterval(()=>{const n=ALL.length;ALL=ALL.filter(fresh);if(ALL.length!==n)applyFilter(true)},300000);
 fromHash();
-load();
+load(false);
 </script>
 </body>
 </html>
