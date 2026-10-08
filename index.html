@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Call It — tennis odds from the market</title>
+<style>
+:root{--foam:#e6f4ef;--coral:#e8574a;--sea:#0b2a31;--teal:#4fd0da;--gold:#f2c14e;color-scheme:light dark}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{margin:0;min-height:100vh;background:radial-gradient(120% 90% at 85% 0,#15474f,var(--sea) 60%) fixed,#0b2a31;color:var(--foam);font:17px/1.55 "Work Sans",system-ui,sans-serif}
+h1{font:800 clamp(2.4rem,9vw,3.4rem)/1 Fraunces,Georgia,serif;letter-spacing:-.025em;margin:0}
+:focus-visible{outline:3px solid #fff;outline-offset:3px}
+[hidden]{display:none!important}
+.toprow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.toprow a{color:#a9d3c6;font-size:.82rem;text-decoration:none;white-space:nowrap}
+.toprow nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 14px}
+.about{max-width:720px;margin:0 auto;padding:20px 20px 60px}
+.about a#backlink{color:#a9d3c6;text-decoration:none;font-size:.92rem}
+.about h2{font:800 clamp(1.9rem,7vw,2.6rem) Fraunces,Georgia,serif;margin:16px 0 6px}
+.about h3{font:800 1.2rem Fraunces,Georgia,serif;margin:22px 0 6px}
+.about p{color:#dcefe8;max-width:36em}
+.fine2{color:#8dc0b1;font-size:.88rem;border-top:1px solid #1d4a50;padding-top:16px;margin-top:26px}
+.bar{position:sticky;top:0;z-index:5;background:#0b2a31f2;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #1d4a50;padding:12px 20px 10px}
+.w{max-width:720px;margin:0 auto}
+.betday{max-width:720px;margin:12px auto 0;padding:0 20px}
+.betday-card{background:linear-gradient(135deg,#153f46,#0e3037);border:1px solid #2b6268;border-radius:18px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.betday-label{color:var(--coral);font:800 .7rem/1.35 "Work Sans",sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.betday-match{font:800 1.05rem/1.25 Fraunces,Georgia,serif;margin-top:2px}
+.betday-meta{color:#a9d3c6;font-size:.76rem;margin-top:4px;line-height:1.35}
+.betday-meta b{color:#fff}
+.betday-pick{text-align:right}
+.betday-pick b{display:block;font:800 1rem/1.1 Fraunces,Georgia,serif;color:#fff}
+.betday-pick small{display:block;color:#a9d3c6;font-size:.72rem;margin-top:3px}
+.betday-pick strong{display:block;color:var(--teal);font:800 1.25rem/1 Fraunces,Georgia,serif;margin-top:4px}
+.oddsbar{max-width:720px;margin:10px auto 0;padding:10px 20px 0}
+.oddsbar label{display:flex;justify-content:space-between;color:#a9d3c6;font-size:.82rem;margin-bottom:4px}
+.oddsbar label b{color:var(--gold)}
+.oddsbar input{width:100%;accent-color:#f2c14e}
+.oddsbar small{display:block;color:#7fb3a5;font-size:.7rem;margin-top:2px}
+.warn{max-width:720px;margin:10px auto 0;padding:10px 14px;background:#4a2a24;border:1px solid #a8554a;border-radius:12px;color:#ffd9d3;font-size:.8rem;line-height:1.4}
+.sod{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;margin-top:8px;padding:7px 12px;border-radius:12px;border:1px solid #2b6268;background:#0e3239;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.sod-l{color:var(--gold);font:800 .6rem/1.2 "Work Sans",sans-serif;text-transform:uppercase;letter-spacing:.08em;max-width:74px}
+.sod-t{font-size:.76rem;color:#dcefe8;line-height:1.3}
+.sod-t small{display:block;color:#8fb9ad;font-size:.68rem}
+.sod-o{color:var(--teal);font:800 1.05rem Fraunces,Georgia,serif}
+.pickbox{margin:12px 0 0;background:#0e3239;border:1px solid #23555c;border-radius:18px;padding:12px 14px}
+.pickbox h3{margin:0 0 6px;color:#fff;font:800 1rem/1.2 Fraunces,Georgia,serif}
+.pickbox.bog{border-color:#f2c14e77;background:linear-gradient(135deg,#17393a,#0e3239)}
+.pickbox.bog h3{color:var(--gold)}
+.pickrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border-top:1px solid #1d4a50;padding:8px 0;color:#a9d3c6;font-size:.86rem}
+.pickrow b{color:#fff;font-weight:700}
+.pickrow span{text-align:right;color:#8dc0b1;font-variant-numeric:tabular-nums}
+.pickrow.pickable{width:100%;background:none;border:0;border-top:1px solid #1d4a50;cursor:pointer;text-align:left;font:inherit}
+.pickrow.pickable.sel{background:#173d43;border-radius:10px}
+.pickrow .pp{display:inline-block;margin-right:8px}
+.betslip{max-width:720px;margin:16px auto 0;background:#0e3239;border:1px solid #2b6268;border-radius:18px;padding:14px}
+.betslip h3{margin:0;color:#fff;font:800 1.15rem/1 Fraunces,Georgia,serif}
+.slipsub{color:#8fb9ad;font-size:.76rem;margin:4px 0 10px}
+.sliplegs{display:grid;gap:7px}
+.slipleg{border:1px solid #26535a;border-radius:10px;padding:8px 10px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.slipleg b{font-size:.8rem;color:#fff}.slipleg small{display:block;color:#8fb9ad}.slipleg button{border:0;background:none;color:#e7a19a;font-size:1rem;cursor:pointer}
+.slipbottom{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;border-top:1px solid #1d4a50;padding-top:12px}
+.slipbottom label{display:block;color:#8fb9ad;font-size:.7rem;margin-bottom:4px}.slipbottom input{width:100%;background:#09262c;border:1px solid #315e63;color:#fff;border-radius:9px;padding:9px}
+.slipreturn{align-self:end;text-align:right;color:#8fb9ad;font-size:.72rem}.slipreturn b{display:block;color:var(--teal);font:800 1.2rem Fraunces,Georgia,serif}
+.why{color:#8fb9ad;font-size:.74rem;margin:8px 0 0;line-height:1.4}
+.stage{max-width:720px;margin:0 auto;padding:18px 20px 8px;display:flex;flex-direction:column;min-height:calc(100svh - 140px)}
+.meta{display:flex;justify-content:space-between;gap:10px;color:#a9d3c6;font-size:.95rem;margin-bottom:12px}
+.panels{display:flex;flex-direction:column;gap:8px;min-height:300px;height:300px}
+.pn{flex:1 1 0;min-height:92px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:#fff;border:3px solid transparent;border-radius:22px;padding:12px 18px 14px;cursor:pointer;font:inherit;transition:flex-grow .7s cubic-bezier(.2,.8,.2,1)}
+.pn[aria-pressed="true"]{border-color:#fff}
+.tg{display:flex;gap:6px;min-height:22px}
+.tg i{font:600 .72rem "Work Sans",sans-serif;font-style:normal;background:#0b2a31b0;color:#fff;border-radius:999px;padding:2px 10px}
+.tg i.y{background:#fff;color:#0b2a31}
+.row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.row b{font:800 clamp(1.5rem,7vw,2.8rem)/1 Fraunces,Georgia,serif;letter-spacing:-.02em}
+.row em{font:800 clamp(2rem,10vw,4.2rem)/.9 Fraunces,Georgia,serif;font-style:normal;font-variant-numeric:tabular-nums}
+.fair{color:#a9d3c6;margin:12px 0 0;text-align:center;font-size:.95rem}
+.fair b{color:#fff}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px}
+.nav button{width:54px;height:54px;border-radius:50%;border:2px solid #2f5b58;background:none;color:#fff;font-size:1.8rem;line-height:1;cursor:pointer}
+.dots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+.dots i{width:9px;height:9px;border-radius:50%;background:#2f5b58}
+.dots i.on{background:var(--coral);transform:scale(1.35)}
+.fine{max-width:720px;margin:26px auto 0;padding:20px 20px 24px;border-top:1px solid #1d4a50;color:#8dc0b1;font-size:.88rem}
+.pans{max-width:1100px;margin:26px auto 0;padding:0 20px}
+.strip{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;align-items:stretch}
+.pn2{flex:0 0 min(84vw,330px);scroll-snap-align:start;background:#0e3239;border:1px solid #23555c;border-radius:20px;padding:14px 14px 10px}
+@media(min-width:1000px){.pn2{flex:1 1 0}.hint{display:none}}
+.pn2 h2{font:800 1.3rem/1 Fraunces,Georgia,serif;letter-spacing:-.02em;margin:0}
+.cap{color:#a9d3c6;font-size:.78rem;margin:4px 0 10px}
+.cap input{width:66px;font:inherit;color:#fff;background:#0f373d;border:1px solid #2f5b58;border-radius:8px;padding:2px 6px;margin-left:4px}
+.hint{color:#7fb3a5;font-size:.8rem;margin:2px 0 0;text-align:right}
+.rg{display:grid;grid-template-columns:32px repeat(6,1fr);gap:1px 3px;font-size:.72rem;align-items:center;text-align:right}
+.rg .hh{color:#7fb3a5;font-size:.65rem}
+.rg .ol{text-align:left;font:800 .95rem Fraunces,Georgia,serif}
+.rg .pr{color:#8dc0b1;font-size:.62rem;margin-bottom:7px}
+.ra{color:var(--coral)}.rb{color:var(--teal)}.rc{color:#a9d3c6}
+.tr,.ac{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid #1d4a50;color:inherit;font:inherit;padding:7px 0;cursor:pointer}
+.ac{grid-template-columns:1fr auto}
+.tr .n{font:800 1.05rem Fraunces,Georgia,serif;color:var(--coral);width:14px}
+.nm b{display:block;font-size:.92rem;line-height:1.2}
+.nm small{display:block;color:#a9d3c6;font-size:.72rem;line-height:1.25}
+.pv{text-align:right}.pv b{display:block;font:800 1.05rem Fraunces,Georgia,serif;line-height:1.1}.pv small{color:#a9d3c6;font-size:.7rem}
+@media(prefers-reduced-motion:reduce){.pn{transition:none}}
+.trk{max-width:720px;margin:0 auto;padding:20px 20px 60px}
+.trk a.back{color:#a9d3c6;text-decoration:none;font-size:.92rem}
+.trk h2{font:800 clamp(1.9rem,7vw,2.6rem) Fraunces,Georgia,serif;margin:16px 0 10px}
+.trk h3{font:800 1.15rem Fraunces,Georgia,serif;margin:20px 0 4px;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#0e3239;border:1px solid #23555c;border-radius:16px;padding:12px 14px}
+.stat small{display:block;color:#a9d3c6;font-size:.72rem}
+.stat b{font:800 1.7rem/1.1 Fraunces,Georgia,serif;color:#fff}
+.prow{background:#0e3239;border:1px solid #23555c;border-radius:14px;padding:10px 12px;margin-top:10px}
+.prow b{display:block;font-size:.9rem;color:#fff}
+.prow small{display:block;color:#8fb9ad;font-size:.74rem}
+.prow small b{display:inline;font-size:inherit}
+.prow .rb2{display:flex;gap:8px;margin-top:8px;align-items:center}
+.prow button{font:600 .78rem "Work Sans",sans-serif;color:#dff3ec;background:none;border:1px solid #2b6268;border-radius:999px;padding:5px 14px;cursor:pointer}
+.prow button.on.w{background:#7fd6a4;color:#0b2a31;border-color:#7fd6a4}
+.prow button.on.l{background:#e7a19a;color:#0b2a31;border-color:#e7a19a}
+.prow span{margin-left:auto;color:var(--teal);font-weight:700;font-size:.85rem}
+.chips{max-width:720px;margin:12px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap}
+.chips button{font:600 .78rem "Work Sans",sans-serif;color:#dff3ec;background:#0e3239;border:1px solid #2b6268;border-radius:999px;padding:7px 14px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:#e6f4ef;color:#0b2a31;border-color:#e6f4ef}
+.mdl{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;font-size:.8rem;color:#a9d3c6;align-items:baseline}
+.mdl b{color:#fff;font-weight:700}.mdl .h{color:#7fb3a5;font-size:.68rem}.mdl span:not(.h){text-align:right;font-variant-numeric:tabular-nums}
+.sum{margin:10px 0 0;text-align:center;color:#a9d3c6;font-size:.88rem;line-height:1.45}.sum b{color:#fff}
+.bigbtn{display:block;width:100%;margin:12px 0 0;padding:13px;border-radius:14px;border:1px solid #2b6268;background:#0e3239;color:#fff;font:600 .95rem "Work Sans",sans-serif;cursor:pointer}
+.rcard{background:#0e3239;border:1px solid #23555c;border-radius:18px;padding:12px 14px;margin-top:14px}
+.rcard h3{margin:0;color:#fff;font:800 1.15rem Fraunces,Georgia,serif}
+.rcard .rs{color:#a9d3c6;font-size:.8rem;margin:3px 0 8px}
+.rleg{display:grid;grid-template-columns:1fr auto;gap:10px;border-top:1px solid #1d4a50;padding:7px 0;font-size:.82rem}
+.rleg b{color:#fff;display:block}.rleg small{color:#8fb9ad}.rleg span{text-align:right;color:#a9d3c6;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="bar"><div class="w"><div class="toprow"><h1>Call it.</h1><nav><a href="#rollover" id="rolllink">Rollover</a><a href="#tracker" id="tracklink">Tracker</a><a href="#about" id="aboutlink">How odds work</a></nav></div></div></div>
+<div class="chips" id="chips" role="group" aria-label="Filter matches"></div>
+<div class="why" id="status" style="max-width:720px;margin:6px auto 0;padding:0 20px"></div>
+<div class="warn" id="warn" hidden></div>
+<div class="oddsbar" id="oddsbar"><label for="minodds"><span>Aiming for odds of at least</span><b id="minoddsv">1.18</b></label><input type="range" id="minodds" min="1.10" max="2.00" step="0.01" value="1.18" aria-label="Minimum odds per pick"><small>Sets the odds floor for the picks on each match. Picks need a 50%+ chance, so the top end is 2.00.</small></div>
+<section class="betday" aria-label="Bet of the Day" id="betday"></section>
+<main class="stage" id="st"></main>
+<article class="about" id="aboutPage" hidden>
+<a href="#" id="backlink">← Back to matches</a>
+<h2>How the numbers work</h2>
+<p>ATP and WTA tour singles (1000s, 500s, 250s) and ATP Challenger singles are shown; men's Slams are not covered yet. A match leaves the page 3 hours after its start time (it stays in the tracker). Pinnacle posts a game handicap and a total-games line for each match. We read those lines, strip the bookmaker margin, and fit the serve strength of both players that reproduces them. The first-set total lines, each player's own games lines and the set lines (+-1.5 sets, 2.5 sets) pin how strong the serves are and how likely a third set is. From that one fitted match we price every pick below. When Pinnacle posts a real moneyline we use it for the winner chance.</p>
+<h3>What each match shows</h3>
+<p><b>Game handicap:</b> the safest handicap line, spread or protection, for a player with at least a 40% chance of winning (never a heavy underdog). <b>Set handicap:</b> +-1.5 sets. When the feed has set lines, both sides are offered; when it has none, the model estimates the protection side (+1.5 sets) only. <b>Total games:</b> the expected total, plus the safest over and the safest under, within 5.5 games of the expected total. <b>First and second set totals:</b> games in that set (6 to 13), over or under 8.5 to 12.5; the second set is always a model estimate. <b>Player totals:</b> each player's own games won over or under a line. <b>Winner:</b> the favourite and the chance. <b>Bet of the game:</b> the highest-chance pick of the match at your odds floor, handicap preferred. The slider sets that odds floor.</p>
+<p>Every line comes from the same fitted match, so a handicap such as -5.5 is chosen because the model gives the favourite a given chance of winning by 6 or more games, not just because he is a favourite.</p>
+<h3>Odds shown</h3>
+<p>Odds are fair odds: 100 divided by the chance, with no bookmaker margin. Your bookmaker pays less, typically 5 to 10% less, so check its price.</p>
+<h3>Bet of the day and special odds</h3>
+<p>Bet of the day is one pick, a double or a treble (three matches at most) with combined odds of at least 1.5, chosen once a day. Special odds of the day needs combined odds of at least 1.3 with no cap on matches. Both stay the same all day.</p>
+<h3>Accumulators and rollovers</h3>
+<p>The accumulators target odds of about 2, 3 and 5 with no cap on matches. Each match contributes its highest-chance pick that pays at least 1.18, and picks are added from the most likely downward until the combined odds reach the target. Chances multiply, so four picks at 80% each only land about 41% of the time. Rolling a bet means putting the whole return on the next pick.</p>
+<p class="fine2">For fun and learning, not betting advice. If gambling stops being fun, talk to someone you trust or a local support service.</p>
+</article>
+<article class="trk" id="trackPage" hidden></article>
+<article class="trk" id="rollPage" hidden></article>
+<div class="pans" id="pans"><div class="strip">
+<section class="pn2" aria-label="Rollover"><h2>Rollover</h2><p class="cap">5 rolls · start <input id="rs" type="number" min="1" value="100" aria-label="Starting amount"></p><div id="roll"></div></section>
+<section class="pn2" aria-label="Top bets"><h2>Top bets</h2><p class="cap">Most likely winners. Tap to open.</p><div id="topc"></div></section>
+<section class="pn2" aria-label="Top accumulators"><h2>Top accumulators</h2><p class="cap">2, 3 and 5 odds. No cap on matches. Tap to add to your slip.</p><div id="accs"></div></section>
+</div><p class="hint">Swipe for more →</p></div>
+<div class="fine" id="fine">Odds are fair odds (100 divided by the chance, no bookmaker margin). Your bookmaker pays less, so check its price. This is for fun and learning, not betting advice.</div>
+<script>
+/* g = [player1, player2, start, [p1%, p2%], label, pick, id]
+   pick.cards = {winner,hcap,total,combo,best,exp}; pick.opts = every candidate pick {k,mk,l,p,o} */
+var ALL=[],G=[],META=null,filt={cat:"all",pickem:false};
+const MIN_LEG=1.18,BOD_MIN=1.5,SOD_MIN=1.3,DAY_LEGS=3;
+const MATCH_MS=3*3600e3;                       /* a match is treated as played 3 hours after its start */
+const fresh=g=>Date.parse(g[2])+MATCH_MS>Date.now();
+const $=i=>document.getElementById(i);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+let minO=+lsGet("minodds",1.18)||1.18,slip=lsGet("betslip",[]),calls=lsGet("calls",{}),i=0,view="main",swiped=false,routed=null,ACCL=[];
+const topIdx=g=>g[3][0]>=g[3][1]?0:1;
+const nm=n=>String(n).split(" ").slice(-1)[0];
+const sg=v=>(v>0?"+":"")+v.toFixed(1);
+const CN=new Intl.NumberFormat("en",{notation:"compact",maximumFractionDigits:1});
+const fn=x=>x>=1000?CN.format(x):Math.round(x)+"";
+const pc=x=>x>=10?Math.round(x)+"":x>=1?x.toFixed(1):x.toFixed(2);
+
+/* every candidate pick of one match, in the shape the slip and the builders use. Model-only winners are left out of the builders. */
+const flat=n=>{const g=G[n];return((g[5].opts)||[]).filter(o=>!o.mo).map(o=>({key:g[6]+"-"+o.k,market:o.mk,pick:o.l,prob:o.p,odds:o.o}))};
+const cardItem=(g,c)=>c?{key:g[6]+"-"+c.k,market:c.mk,pick:c.l,prob:c.p,odds:c.o}:null;
+const legItem=L=>({key:L.x.key,match:L.g[0]+" vs "+L.g[1],market:L.x.market,pick:L.x.pick,odds:L.x.odds});
+const bonus={Handicap:2,Set:1,Winner:2,Total:0};
+const score=o=>o.p+(bonus[o.mk]||0);
+/* the cards of one match at an odds floor: the highest-chance pick of each kind that pays at least minOdds */
+function pickCards(g,minOdds){
+  const all=g[5].opts||[],O=all.filter(o=>o.o>=minOdds);
+  const top=mk=>O.filter(o=>o.mk===mk).sort((a,b)=>b.p-a.p)[0]||null;
+  const winner=all.find(o=>o.mk==="Winner")||null;
+  const hcap=top("Handicap"),sethc=top("Set"),set1=top("Set1Total"),set2=top("Set2Total");
+  const pt=n=>O.filter(o=>o.mk==="PlayerTotal"&&o.l.indexOf(n+" ")===0).sort((a,b)=>b.p-a.p)[0]||null;
+  const ph=pt(g[0]),pa=pt(g[1]);
+  const tot=re=>O.filter(o=>o.mk==="Total"&&re.test(o.l)).sort((a,b)=>b.p-a.p)[0]||null;
+  const over=tot(/^Over/),under=tot(/^Under/),total=[over,under].filter(Boolean).sort((a,b)=>b.p-a.p)[0]||null;
+  const best=[hcap,sethc,total,set1,set2,ph,pa,winner&&!winner.mo&&winner.o>=minOdds?winner:null].filter(x=>x&&x.p>=55).sort((a,b)=>score(b)-score(a))[0]||null;
+  return{winner,hcap,sethc,over,under,total,set1,set2,ph,pa,best}
+}
+/* best single pick of each match: the highest chance that still pays at least minOdds */
+function bestLegs(minOdds,winnerOnly){
+  const out=[];
+  G.forEach((g,gi)=>{
+    const c=flat(gi).filter(x=>x.prob>=50&&x.odds>=minOdds&&(!winnerOnly||x.market==="Winner")).sort((a,b)=>score({p:b.prob,mk:b.market})-score({p:a.prob,mk:a.market}))[0];
+    if(c)out.push({gi,g,x:c,p:c.prob})
+  });
+  return out.sort((a,b)=>b.p-a.p)
+}
+const chanceOf=L=>L.reduce((a,l)=>a*l.p/100,1),oddsOf=L=>L.reduce((a,l)=>a*l.x.odds,1);
+/* chain the most likely picks (one per match, no cap on matches) until the combined odds reach T */
+function chainFor(T){const legs=bestLegs(MIN_LEG,false),L=[];for(const l of legs){L.push(l);if(oddsOf(L)>=T)break}return{L,ok:oddsOf(L)>=T&&L.length>0}}
+
+/* ===== BET OF THE DAY + SPECIAL ODDS: chosen once a day, from every match on the page ===== */
+const findOpt=key=>{for(const g of ALL){const p=g[6]+"-";if(key.indexOf(p)===0){const o=(g[5].opts||[]).find(o=>g[6]+"-"+o.k===key);if(o)return{id:g[6],key,match:g[0]+" vs "+g[1],market:o.mk,pick:o.l,prob:o.p,odds:o.o}}}return null};
+function dayPool(){
+  const pool=[],bands=[[1.18,1.3],[1.3,1.5],[1.5,2.01]];
+  ALL.forEach(g=>{
+    const O=(g[5].opts||[]).filter(o=>!o.mo&&o.p>=50&&o.o>=MIN_LEG);
+    bands.forEach(([lo,hi])=>{const c=O.filter(o=>o.o>=lo&&o.o<hi).sort((a,b)=>score(b)-score(a))[0];
+      if(c)pool.push({id:g[6],key:g[6]+"-"+c.k,match:g[0]+" vs "+g[1],market:c.mk,pick:c.l,prob:c.p,odds:c.o})})
+  });
+  return pool
+}
+/* the highest-chance set of picks from different matches (up to maxLegs) whose combined odds reach minC */
+function dayCompute(pool,minC,maxLegs){
+  let best=null;
+  const consider=legs=>{let o=1,p=1;legs.forEach(l=>{o*=l.odds;p*=l.prob/100});if(o<minC)return;const adj=p*Math.pow(0.97,legs.length);if(!best||adj>best.adj+1e-12)best={legs,odds:o,prob:p,adj}};
+  const n=pool.length;
+  for(let a=0;a<n;a++){consider([pool[a]]);if(maxLegs<2)continue;
+    for(let b=a+1;b<n;b++){if(pool[b].id===pool[a].id)continue;consider([pool[a],pool[b]]);if(maxLegs<3)continue;
+      for(let c=b+1;c<n;c++){if(pool[c].id===pool[a].id||pool[c].id===pool[b].id)continue;consider([pool[a],pool[b],pool[c]])}}}
+  return best
+}
+function dayPick(store,minC,maxLegs){
+  const day=new Date().toDateString(),st=lsGet(store,null);
+  if(st&&st.day===day&&st.keys){
+    const legs=st.keys.map(findOpt);
+    if(legs.length&&legs.every(Boolean)){let o=1,p=1;legs.forEach(l=>{o*=l.odds;p*=l.prob/100});if(o>=minC)return{legs,odds:o,prob:p}}
+  }
+  const b=dayCompute(dayPool(),minC,maxLegs);
+  if(b)lsSet(store,{day,keys:b.legs.map(l=>l.key)});
+  return b
+}
+function toSlip(L){slip=L.map(l=>({key:l.key,match:l.match,market:l.market,pick:l.pick,odds:l.odds}));slipSave();
+  filt.cat="all";filt.pickem=false;applyFilter(false);
+  const gi=G.findIndex(g=>g[6]===L[0].id);i=Math.max(0,gi);route("/"+i);
+  setTimeout(()=>{const e=$("betslip");if(e)e.scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})},150)}
+function renderBetDay(){
+  const b=dayPick("bod4",BOD_MIN,DAY_LEGS),sp=dayPick("sod4",SOD_MIN,DAY_LEGS);
+  let h="";
+  if(b){
+    const L=b.legs,single=L.length===1,pct=(b.prob*100).toFixed(1),names=["single","double","treble"];
+    const left=single?'<div class="betday-match">'+esc(L[0].pick)+'</div><div class="betday-meta">'+esc(L[0].match)+' · '+pct+'% chance</div>'
+      :'<div class="betday-match">'+pct+'% chance all land</div>'+L.map(l=>'<div class="betday-meta"><b>'+esc(l.pick)+'</b> · '+esc(l.match)+'</div>').join('');
+    h+='<button class="betday-card" id="bdcard"><div><div class="betday-label">Bet of the Day · '+names[L.length-1]+'</div>'+left+'</div><div class="betday-pick"><b>'+L.length+' leg'+(single?'':'s')+'</b><small>Combined odds</small><strong>'+b.odds.toFixed(2)+'</strong></div></button>'
+  }
+  if(sp){
+    const L=sp.legs;
+    h+='<button class="sod" id="sodcard"><span class="sod-l">Special odds of the day</span><span class="sod-t">'+esc(L.map(l=>l.pick).join(" + "))+'<small>'+esc(L.map(l=>l.match).join(" · "))+' · '+(sp.prob*100).toFixed(0)+'%</small></span><span class="sod-o">'+sp.odds.toFixed(2)+'</span></button>'
+  }
+  $("betday").innerHTML=h;
+  if(b)$("bdcard").onclick=()=>toSlip(b.legs);
+  if(sp)$("sodcard").onclick=()=>toSlip(sp.legs)
+}
+
+/* ===== BET SLIP ===== */
+const slipSave=()=>lsSet("betslip",slip);
+function addSlip(item){if(slip.some(x=>x.key===item.key))slip=slip.filter(x=>x.key!==item.key);else slip.push(item);slipSave();renderSlip();drawCards()}
+function renderSlip(){
+  const el=$("betslip");if(!el)return;
+  const stake=+(($("slipstake")||{}).value||100),odds=slip.reduce((a,x)=>a*x.odds,1);
+  el.innerHTML='<h3>Bet slip <span style="float:right;color:#8fb9ad;font:600 .72rem Work Sans,sans-serif">'+slip.length+' pick'+(slip.length===1?'':'s')+'</span></h3><div class="slipsub">Tap a pick to add or remove it.</div><div class="sliplegs">'+(slip.length?slip.map(x=>'<div class="slipleg"><div><b>'+esc(x.pick)+'</b><small>'+esc(x.match)+' · '+esc(x.market)+'</small></div><div><button data-remove="'+x.key+'" aria-label="Remove pick">×</button><small>'+x.odds.toFixed(2)+'</small></div></div>').join(''):'<div class="why">No picks selected yet.</div>')+'</div><div class="slipbottom"><div><label>STAKE</label><input id="slipstake" type="number" min="1" value="'+stake+'"></div><div class="slipreturn">Combined odds '+(slip.length?odds.toFixed(2):'—')+'<b>₦'+(slip.length?(stake*odds).toFixed(2):'0.00')+'</b></div></div>';
+  el.querySelectorAll("[data-remove]").forEach(b=>{b.onclick=()=>{slip=slip.filter(x=>x.key!==b.dataset.remove);slipSave();renderSlip();drawCards()}});
+  $("slipstake").oninput=renderSlip
+}
+function fillSlip(L){
+  slip=L.map(legItem);slipSave();
+  filt.cat="all";filt.pickem=false;applyFilter(false);
+  const gi=G.findIndex(g=>g[6]===L[0].g[6]);i=Math.max(0,gi);route("/"+i);
+  setTimeout(()=>{const b=$("betslip");if(b)b.scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})},150)
+}
+
+/* ===== ROUTING (#/3 = match page, #about, #tracker, #rollover) ===== */
+function route(h){routed=h;try{location.hash=h}catch(e){}apply(h)}
+function setView(v){
+  view=v;
+  const show=(id,on)=>{const el=$(id);if(el)el.hidden=!on};
+  show("aboutPage",v==="about");show("trackPage",v==="track");show("rollPage",v==="roll");show("chips",v==="main"||v==="roll");show("status",v==="main"||v==="roll");
+  ["st","betday","pans","fine","oddsbar"].forEach(id=>show(id,v==="main"))
+}
+function go(d){if(!G.length)return;i=(i+d+G.length)%G.length;route("/"+i)}
+function apply(h){
+  if(h==="about"){setView("about");scrollTo(0,0);return}
+  if(h==="tracker"){setView("track");renderTracker();scrollTo(0,0);return}
+  if(h==="rollover"){setView("roll");renderRoll();scrollTo(0,0);return}
+  const was=view!=="main";setView("main");if(was)scrollTo(0,0);
+  const m=h.match(/^\/(\d+)$/);if(m)i=Math.max(0,Math.min(+m[1],G.length-1));
+  renderBetDay();render(true)
+}
+function fromHash(){const h=location.hash.replace("#","");if(h===routed)return;routed=h;apply(h)}
+addEventListener("hashchange",fromHash);
+
+/* ===== MATCH PAGE ===== */
+const ITEMS={};
+function pickRow(x,tail){
+  ITEMS[x.key]=x;
+  const sel=slip.some(s=>s.key===x.key);
+  return'<button class="pickrow pickable '+(sel?'sel':'')+'" data-key="'+x.key+'"><b>'+esc(x.pick)+(tail?'<small style="display:block;color:#8fb9ad;font-weight:400">'+tail+'</small>':'')+'</b><span><span class="pp">'+x.prob.toFixed(1)+'%</span>'+x.odds.toFixed(2)+'</span></button>'
+}
+function wirePicks(root,g){
+  root.querySelectorAll("[data-key]").forEach(b=>{b.onclick=()=>{const x=ITEMS[b.dataset.key];if(x)addSlip({key:x.key,match:g[0]+" vs "+g[1],market:x.market,pick:x.pick,odds:x.odds})}})
+}
+function cardsHtml(g){
+  const t=g[5],C=pickCards(g,minO);
+  if(!t.opts)return'<div class="pickbox"><h3>Waiting for the updated server</h3><p class="why">This match came from an old version of compute-odds.js. Update the file on GitHub and redeploy.</p></div>';
+  const none='<div class="pickrow"><b>No pick at '+minO.toFixed(2)+' or better in this match</b><span></span></div><p class="why">Lower the odds slider to see more.</p>';
+  const row=(c,tail)=>c?pickRow(cardItem(g,c),tail):none;
+  const kind={Handicap:"Game handicap",Set:"Set handicap",Total:"Total games",Set1Total:"First set total",Set2Total:"Second set total",PlayerTotal:"Player total",Winner:"Winner"};
+  const tl=c=>c?[c.cush!=null&&c.cush>0?c.cush.toFixed(1)+" games of cushion":"",c.mod?"model estimate, no line posted":""].filter(Boolean).join(" · "):"";
+  const hasSet=(t.opts||[]).some(o=>o.mk==="Set");
+  let h='<div class="pickbox bog"><h3>Bet of the game</h3>'+row(C.best,C.best?esc(kind[C.best.mk]):"")+'<p class="why">The highest-chance pick here that pays at least '+minO.toFixed(2)+', handicap preferred.</p></div>';
+  h+='<div class="pickbox"><h3>Game handicap</h3>'+row(C.hcap)+'</div>';
+  h+='<div class="pickbox"><h3>Set handicap</h3>'+row(C.sethc,tl(C.sethc))+(hasSet&&C.sethc&&C.sethc.mod?'<p class="why">With no set line posted, only the protection side (+1.5 sets) is offered.</p>':'')+'</div>';
+  const cu=c=>c&&c.cush!=null&&c.cush>0?c.cush.toFixed(1)+' games of cushion':"";
+  h+='<div class="pickbox"><h3>Total games</h3><p class="why" style="margin:0 0 4px">Expected total: <b style="color:#fff">'+(t.exp==null?"—":t.exp.toFixed(1))+'</b> games</p>'+(C.over||C.under?(C.over?pickRow(cardItem(g,C.over),cu(C.over)):'')+(C.under?pickRow(cardItem(g,C.under),cu(C.under)):''):none)+'</div>';
+  h+='<div class="pickbox"><h3>First set total</h3>'+row(C.set1,tl(C.set1))+'</div>';
+  h+='<div class="pickbox"><h3>Second set total</h3>'+row(C.set2,tl(C.set2))+'</div>';
+  h+='<div class="pickbox"><h3>Player totals</h3>'+(C.ph||C.pa?(C.ph?pickRow(cardItem(g,C.ph),tl(C.ph)):'')+(C.pa?pickRow(cardItem(g,C.pa),tl(C.pa)):''):none)+'<p class="why">Each player\'s own games won in the match.</p></div>';
+  h+='<div class="pickbox"><h3>Winner</h3>'+(C.winner?pickRow(cardItem(g,C.winner)):'<div class="pickrow"><b>—</b><span></span></div>')+(C.winner&&C.winner.mo?'<p class="why">Model only: no moneyline was posted to confirm this.</p>':'')+'</div>';
+  return h
+}
+function drawCards(){const el=$("cards");if(!el||!G.length)return;const g=G[i];el.innerHTML=cardsHtml(g);wirePicks(el,g)}
+function modelBox(g){
+  const t=g[5],M=t.model;if(!M)return"";
+  const row=(l,a,b)=>'<b>'+l+'</b><span>'+a+'</span><span>'+b+'</span>';
+  return'<div class="pickbox"><h3>Model numbers</h3><div class="mdl"><span class="h"></span><span class="h">'+esc(nm(g[0]))+'</span><span class="h">'+esc(nm(g[1]))+'</span>'
+   +row("Win chance",g[3][0]+"%",g[3][1]+"%")
+   +row(t.src==="Pinnacle moneyline"?"Pinnacle moneyline":"Est. bookmaker moneyline",t.odds[0].toFixed(2),t.odds[1].toFixed(2))
+   +row("Hold chance",M.holds[0]+"%",M.holds[1]+"%")
+   +row("Confidence",esc(t.prediction),"")
+   +(M.three==null?"":row("Three-set chance",M.three+"%",M.threeMkt==null?"no line":"market "+M.threeMkt+"%")+row("Serve level",M.S,"")+(M.tb1==null?"":row("First-set tiebreak",M.tb1+"%",""))+'<b>Anchored by</b><span style="grid-column:2/4;text-align:right">'+esc(M.anchor)+'</span>')
+   +'<b>Expected total games</b><span>'+(M.medTotal==null?M.total.toFixed(1):M.medTotal.toFixed(1))+'</span><span>market '+M.mktTotal.toFixed(1)+'</span></div></div>'
+}
+function render(anim){
+  if(!G.length){$("st").innerHTML='<p class="fair" style="padding:60px 0">'+(META?"No matches for this filter right now.":"Loading matches…")+'</p>';return}
+  const g=G[i],m=topIdx(g),t=g[5],M=t.model,key=g[6],cols=["#1a7f8f","#e8574a"];
+  const when=new Date(g[2]).toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+  let h='<div class="meta"><span>'+when+'</span><span>'+esc(g[4])+'</span></div><div class="panels">';
+  [g[0],g[1]].forEach((n,k)=>{h+='<button class="pn" aria-pressed="'+(calls[key]===k)+'" style="background:'+cols[k]+'"><span class="tg">'+(k==m?"<i>Model pick · "+esc(t.prediction)+"</i>":"")+(calls[key]===k?'<i class="y">Your call</i>':"")+'</span><span class="row"><b>'+esc(n)+'</b><em>'+g[3][k]+'%</em></span></button>'});
+  h+='</div>';
+  if(M){const med=M.medSpread==null?M.spread:M.medSpread,who=med>=0?g[0]:g[1];
+    h+='<p class="sum">'+(Math.abs(med)<0.3?'Too close to call on games':'Typical result: <b>'+esc(who)+'</b> by about <b>'+Math.abs(med).toFixed(1)+'</b> games')+' · expected total <b>'+(t.exp==null?M.total:t.exp).toFixed(1)+'</b> games</p>'}
+  h+='<div id="cards"></div>';
+  h+='<section class="betslip" id="betslip" aria-label="Bet slip"></section>'+modelBox(g)+'<div class="nav"><button id="pv" aria-label="Previous match">‹</button><div class="dots" aria-label="Match '+(i+1)+' of '+G.length+'">'+G.map((_,j)=>'<i class="'+(j==i?"on":"")+'"></i>').join('')+'</div><button id="nx" aria-label="Next match">›</button></div><p class="fair" id="mine"></p>';
+  $("st").innerHTML=h;
+  drawCards();renderSlip();
+  let n=0,ag=0;G.forEach(x=>{const c=calls[x[6]];if(c!==undefined){n++;if(c===topIdx(x))ag++}});
+  $("mine").textContent=n?"Your calls: "+n+" of "+G.length+" · With the model: "+ag+" · Against it: "+(n-ag):"Tap a side to make your call. Swipe for the next match.";
+  const ps=[].slice.call(document.querySelectorAll(".pn"));
+  ps.forEach((b,k)=>{b.style.flexGrow=(anim&&!RM)?1:g[3][k];b.onclick=()=>{if(swiped)return;if(calls[key]===k)delete calls[key];else calls[key]=k;lsSet("calls",calls);render(false)}});
+  if(anim&&!RM)requestAnimationFrame(()=>requestAnimationFrame(()=>{ps.forEach((b,k)=>{b.style.flexGrow=g[3][k]})}));
+  $("pv").onclick=()=>go(-1);$("nx").onclick=()=>go(1)
+}
+
+/* ===== PANELS ===== */
+function roll(){
+  const s=+$("rs").value||0;let h='<div class="rg"><span></span>'+["Start",1,2,3,4,5].map(x=>'<span class="hh">'+x+'</span>').join("");
+  [[1.5,"ra"],[2,"rb"],[3,"rc"]].forEach(L=>{const o=L[0],r=[0,1,2,3,4,5];
+    h+='<b class="ol '+L[1]+'">'+o.toFixed(1)+'x</b>'+r.map(n=>'<b class="am '+L[1]+'">'+fn(s*Math.pow(o,n))+'</b>').join('')+'<span></span>'+r.map(n=>'<span class="pr">'+pc(Math.pow(1/o,n)*100)+'%</span>').join('')});
+  $("roll").innerHTML=h+'</div>'
+}
+$("rs").oninput=roll;
+const ACCS=[2,3,5];
+function buildPanels(){
+  roll();
+  const W=bestLegs(1.05,true);
+  $("topc").innerHTML=W.slice(0,5).map((f,n)=>{const g=f.g,other=f.x.pick===g[0]?g[1]:g[0];
+    return'<button class="tr" data-i="'+n+'"><span class="n">'+(n+1)+'</span><span class="nm"><b>'+esc(f.x.pick)+'</b><small>v '+esc(other)+'</small></span><span class="pv"><b>'+f.p+'%</b><small>'+f.x.odds.toFixed(2)+'</small></span></button>'}).join("")||'<div class="why">No confirmed winners yet.</div>';
+  document.querySelectorAll(".tr").forEach(b=>{b.onclick=()=>{i=W[+b.dataset.i].gi;route("/"+i);scrollTo({top:0,behavior:RM?"auto":"smooth"})}});
+  ACCL=ACCS.map(T=>chainFor(T));
+  $("accs").innerHTML=ACCS.map((T,n)=>{const c=ACCL[n],L=c.L;
+    if(!L.length)return'<div class="ac" style="cursor:default"><span class="nm"><b>'+T+' odds</b><small>No picks yet</small></span><span></span></div>';
+    const names=L.slice(0,3).map(l=>esc(l.x.pick)).join(' · ')+(L.length>3?' · +'+(L.length-3)+' more':'');
+    return'<button class="ac" data-acc="'+n+'"><span class="nm"><b>'+T+' odds · '+L.length+' leg'+(L.length===1?'':'s')+'</b><small>'+(c.ok?names:'Only reaches '+oddsOf(L).toFixed(2)+' with every match · '+names)+'</small></span><span class="pv"><b>'+pc(chanceOf(L)*100)+'%</b><small>'+oddsOf(L).toFixed(2)+'</small></span></button>'}).join('');
+  document.querySelectorAll("[data-acc]").forEach(b=>{b.onclick=()=>{const c=ACCL[+b.dataset.acc];if(c&&c.L.length)fillSlip(c.L)}})
+}
+
+/* ===== ROLLOVER PAGE: the safest pick of each match, chained until the combined odds reach a target ===== */
+function renderRoll(){
+  const el=$("rollPage");
+  let h='<a href="#" class="back" id="rlback">← Back to matches</a><h2>Rollover</h2><p class="why" style="font-size:.85rem">Each match contributes its highest-chance pick that pays at least '+MIN_LEG.toFixed(2)+'. Picks are rolled from the most likely downward, with no cap on matches, until the combined odds reach 2, 3 and 5. The chance of all landing is about 1 divided by the combined odds, so a 2.00 rollover can never be much better than a coin flip. What the safest picks buy you is that no single leg is a long shot.</p>';
+  if(!bestLegs(MIN_LEG,false).length)h+='<p class="why">No matches to build from right now.</p>';
+  ACCS.forEach(T=>{
+    const c=chainFor(T),L=c.L;let run=1;
+    h+='<div class="rcard"><h3>Rollover to '+T.toFixed(2)+(c.ok?'':'+')+'</h3><p class="rs">'+L.length+' pick'+(L.length===1?'':'s')+' · combined odds <b style="color:#fff">'+oddsOf(L).toFixed(2)+'</b> · chance all land <b style="color:#fff">'+pc(chanceOf(L)*100)+'%</b>'+(c.ok?'':' · not enough matches to reach '+T+' today')+'</p>'
+     +L.map(l=>{run*=l.x.odds;return'<div class="rleg"><div><b>'+esc(l.x.pick)+'</b><small>'+esc(l.g[0])+' vs '+esc(l.g[1])+' · '+esc(l.x.market)+'</small></div><span>'+l.p+'%<br>'+l.x.odds.toFixed(2)+' · total '+run.toFixed(2)+'</span></div>'}).join('')
+     +(L.length?'<button class="bigbtn" data-roll="'+T+'">Add all '+L.length+' to bet slip</button>':'')+'</div>'
+  });
+  el.innerHTML=h;
+  $("rlback").onclick=e=>{e.preventDefault();route("/"+i)};
+  el.querySelectorAll("[data-roll]").forEach(b=>{b.onclick=()=>{const c=chainFor(+b.dataset.roll);if(c.L.length)fillSlip(c.L)}})
+}
+
+/* ===== PREDICTION STORAGE + TRACKER =====
+   Every match is saved once and never deleted: the winner pick and the bet of the game.
+   Only the result (won/lost) can be set or cleared. Played matches leave the prediction page 3 hours after
+   their start but stay here. */
+let preds=lsGet("ci_preds",[]);
+function savePreds(){
+  let ch=false;
+  ALL.forEach(g=>{const t=g[5],id=g[6],mt=g[0]+" vs "+g[1],b=pickCards(g,MIN_LEG).best;
+    if(!preds.some(p=>p.id===id)){preds.push({id,match:mt,when:g[2],market:t.market,odds:t.pickOdds||null,prob:t.prob,label:t.prediction,res:""});ch=true}
+    if(b&&!preds.some(p=>p.id===id+"-b")){preds.push({id:id+"-b",match:mt,when:g[2],market:b.l,odds:b.o,prob:b.p,label:"best",res:""});ch=true}});
+  if(ch)lsSet("ci_preds",preds)
+}
+function calib(){
+  return [[50,60],[60,70],[70,80],[80,90],[90,101]].map(([a,b])=>{
+    const s=preds.filter(p=>p.prob>=a&&p.prob<b&&p.res),w=s.filter(p=>p.res==="won").length;
+    return'<div class="prow"><b>Called '+a+'–'+Math.min(b,100)+'%</b><small>'+(s.length?w+' of '+s.length+' won ('+Math.round(w/s.length*100)+'%)':'no results yet')+'</small></div>'}).join('')
+}
+function renderTracker(){
+  const won=preds.filter(p=>p.res==="won").length,lost=preds.filter(p=>p.res==="lost").length,done=won+lost;
+  const od=preds.filter(p=>p.odds),avg=od.length?od.reduce((a,p)=>a+p.odds,0)/od.length:0;
+  const wo=preds.filter(p=>p.res==="won"&&p.odds),avgW=wo.length?wo.reduce((a,p)=>a+p.odds,0)/wo.length:0;
+  const played=p=>!fresh([0,0,p.when]);
+  const toMark=preds.filter(p=>!p.res&&played(p)).length;
+  let h='<a href="#" class="back" id="trkback">← Back to matches</a><h2>Tracker</h2><div class="stats">'
+   +'<div class="stat"><small>Win rate</small><b>'+(done?(won/done*100).toFixed(1)+'%':'—')+'</b></div>'
+   +'<div class="stat"><small>Average odds</small><b>'+(avg?avg.toFixed(2):'—')+'</b></div>'
+   +'<div class="stat"><small>Won / lost</small><b>'+won+' / '+lost+'</b></div>'
+   +'<div class="stat"><small>Average odds of wins</small><b>'+(avgW?avgW.toFixed(2):'—')+'</b></div></div>'
+   +'<p class="why">'+preds.length+' prediction'+(preds.length===1?'':'s')+' stored, '+toMark+' played and waiting for you to mark Won or Lost. Predictions are never deleted.</p>';
+  h+='<h3>Calibration</h3><p class="why">Of the picks called in each range, how many actually won. A well-calibrated model wins about as often as its range says.</p>'+calib();
+  h+='<h3>Predictions</h3>';
+  h+=preds.slice().sort((a,b)=>(played(b)&&!b.res)-(played(a)&&!a.res)||new Date(b.when)-new Date(a.when)).map(p=>'<div class="prow"><b>'+esc(p.match)+'</b><small>'+esc(p.market)+(p.prob?' · '+p.prob+'%':'')+' · '+new Date(p.when).toLocaleDateString(undefined,{month:"short",day:"numeric"})+' · '+(played(p)?'<b style="color:#7fd6a4">played</b>':'<b style="color:#f2c14e">not played yet</b>')+'</small><div class="rb2"><button class="w'+(p.res==="won"?' on':'')+'" data-id="'+esc(p.id)+'" data-r="won">Won</button><button class="l'+(p.res==="lost"?' on':'')+'" data-id="'+esc(p.id)+'" data-r="lost">Lost</button><span>'+(p.odds?p.odds.toFixed(2):'no price')+'</span></div></div>').join('');
+  $("trackPage").innerHTML=h;
+  $("trkback").onclick=e=>{e.preventDefault();route("/"+i)};
+  $("trackPage").querySelectorAll("[data-id]").forEach(b=>{b.onclick=()=>{const p=preds.find(x=>x.id===b.dataset.id);if(!p)return;p.res=p.res===b.dataset.r?"":b.dataset.r;lsSet("ci_preds",preds);renderTracker()}})
+}
+
+/* ===== INPUT ===== */
+let sx=0,sy=0;
+$("st").addEventListener("touchstart",e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+$("st").addEventListener("touchend",e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){swiped=true;go(dx<0?1:-1);setTimeout(()=>{swiped=false},400)}},{passive:true});
+addEventListener("keydown",e=>{
+  if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  const d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0;if(!d)return;
+  if(view==="main")go(d)
+});
+$("backlink").onclick=e=>{e.preventDefault();route("/"+i)};
+$("aboutlink").onclick=e=>{e.preventDefault();route("about")};
+$("tracklink").onclick=e=>{e.preventDefault();route("tracker")};
+$("rolllink").onclick=e=>{e.preventDefault();route("rollover")};
+
+/* ===== START ===== */
+const CATS=[["all","All"],["ATP 1000","ATP 1000"],["WTA 1000","WTA 1000"],["Tour","Other tour"],["Challenger","Challengers"]];
+function renderChips(){
+  $("chips").innerHTML=CATS.map(c=>'<button data-c="'+c[0]+'" aria-pressed="'+(filt.cat===c[0])+'">'+c[1]+'</button>').join("")+'<button data-p="1" aria-pressed="'+filt.pickem+'">Pick-em 1.70–2.50</button>';
+  $("chips").querySelectorAll("[data-c]").forEach(b=>{b.onclick=()=>{filt.cat=b.dataset.c;applyFilter(false)}});
+  $("chips").querySelector("[data-p]").onclick=()=>{filt.pickem=!filt.pickem;applyFilter(false)}
+}
+function applyFilter(keep){
+  G=ALL.filter(g=>(filt.cat==="all"||g[5].cat===filt.cat)&&(!filt.pickem||g[5].pickem));
+  i=keep?Math.min(i,Math.max(0,G.length-1)):0;
+  buildPanels();renderChips();
+  if(view==="main"){renderBetDay();render(true)}else if(view==="track")renderTracker();else if(view==="roll")renderRoll()
+}
+const setStatus=t=>{$("status").textContent=t};
+async function load(){
+  setStatus("Loading matches…");
+  try{
+    const r=await fetch("/.netlify/functions/compute-odds"),d=await r.json();
+    if(!r.ok||!d.matches)throw new Error(d.error||("HTTP "+r.status));
+    ALL=d.matches;META=d.meta;const old=!(d.meta&&d.meta.v>=5);$("warn").hidden=!old;if(old)$("warn").textContent='The server is still running an old version of compute-odds.js, so picks cannot be built. Update netlify/functions/compute-odds.js on GitHub, then redeploy with "Clear cache and deploy site".';savePreds();
+    ALL=ALL.filter(fresh);
+    const sk=Object.keys(d.meta.skipped||{}).length?" · skipped: "+Object.entries(d.meta.skipped).map(e=>e[1]+" "+e[0]).join(", "):"";
+    setStatus(ALL.length+" tour and Challenger matches · lines via Pinnwire · updated "+new Date(d.meta.generated_at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+(d.stale?" (cached: "+d.warning+")":"")+sk)
+  }catch(e){ALL=[];META={};setStatus("Couldn't load matches: "+e.message)}
+  applyFilter(false)
+}
+$("minodds").value=minO;$("minoddsv").textContent=minO.toFixed(2);
+$("minodds").oninput=e=>{minO=+e.target.value;lsSet("minodds",minO);$("minoddsv").textContent=minO.toFixed(2);drawCards()};
+/* every 5 minutes, drop matches that started more than 3 hours ago (they stay in the tracker) */
+setInterval(()=>{const n=ALL.length;ALL=ALL.filter(fresh);if(ALL.length!==n)applyFilter(true)},300000);
+fromHash();
+load();
+</script>
+</body>
+</html>
